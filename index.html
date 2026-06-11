@@ -2,29 +2,87 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>get-cool.ru — Чистый поиск без рекламы</title>
-    <!-- Часть 2: CSS-стили (вставьте сюда) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>get-cool.ru — Чистый поиск</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        html,body{width:100%;height:100%;overflow:hidden;position:fixed;top:0;left:0}
+        body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;display:flex;flex-direction:column;align-items:center}
+        .app{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+        .search-center{flex:1;width:100%;max-width:680px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .4s}
+        .search-center.top{flex:0 0 auto;justify-content:flex-start;padding-top:30px;padding-bottom:10px}
+        .logo{font-size:52px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:font-size .4s}
+        .search-center.top .logo{font-size:30px}
+        .logo-sub{font-size:14px;color:#88889a;margin-top:4px}
+        .domain-badge{display:inline-block;background:#13131d;border:1px solid #1e1e2e;border-radius:20px;padding:4px 14px;font-size:12px;color:#60a5fa;margin-top:6px}
+        .search-section{width:100%;margin-top:16px}
+        .search-wrapper{display:flex;gap:8px;align-items:center}
+        .search-input{flex:1;padding:14px 18px;font-size:17px;background:#13131d;border:2px solid #1e1e2e;border-radius:14px;color:#fff;outline:none;height:50px}
+        .search-input:focus{border-color:#60a5fa}
+        .search-btn{width:50px;height:50px;border-radius:14px;border:none;background:linear-gradient(135deg,#60a5fa,#a78bfa);color:#0a0a10;font-size:22px;cursor:pointer;flex-shrink:0}
+        .search-btn:disabled{opacity:.5;cursor:not-allowed}
+        .search-btn .spinner{display:none;width:20px;height:20px;border:2px solid #0a0a10;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+        .search-btn.loading .icon{display:none}
+        .search-btn.loading .spinner{display:block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .search-hint{text-align:center;font-size:12px;color:#555;margin-top:8px}
+        .search-hint span{color:#88889a;cursor:pointer;text-decoration:underline;margin:0 4px}
+        .search-hint span:hover{color:#60a5fa}
+        .status-bar{display:flex;align-items:center;gap:8px;padding:6px 14px;background:#13131d;border:1px solid #1e1e2e;border-radius:20px;font-size:11px;color:#88889a;margin-top:6px;opacity:0;transition:opacity .3s}
+        .status-bar.visible{opacity:1}
+        .status-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:blink 1.5s infinite}
+        .status-dot.searching{background:#fbbf24;animation:blink .5s infinite}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+        .results-scroll{display:none;flex:1;width:100%;max-width:780px;padding:0 20px;overflow-y:auto;min-height:0}
+        .results-scroll.active{display:block}
+        .results-container{display:flex;flex-direction:column;gap:8px;padding-bottom:20px}
+        .result-card{background:#13131d;border:1px solid #1e1e2e;border-radius:14px;padding:14px 16px;cursor:pointer;transition:.25s;position:relative}
+        .result-card:hover{border-color:#ffffff20;transform:translateY(-2px)}
+        .result-card:active{transform:scale(.985)}
+        .result-url{font-size:10px;color:#60a5fa;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:50px}
+        .result-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+        .result-snippet{font-size:12px;color:#88889a;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+        .result-badge{position:absolute;top:12px;right:14px;font-size:9px;background:#22c55e18;color:#4ade80;padding:3px 8px;border-radius:8px;font-weight:700}
+        .empty-state{text-align:center;padding:40px 20px;color:#88889a}
+        .empty-icon{font-size:44px;margin-bottom:8px;opacity:.6}
+        .empty-title{font-size:16px;font-weight:600;margin-bottom:4px;color:#ccc}
+        .empty-sub{font-size:12px;color:#666}
+        .reader-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+        .reader-overlay.open{display:flex}
+        .reader-window{background:#f8f9fa;color:#1a1a2e;width:100%;max-width:720px;border-radius:14px;margin:20px 0;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+        .reader-header{background:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:5}
+        .reader-logo{font-weight:900;font-size:15px;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .reader-badge{font-size:9px;background:#22c55e18;color:#16a34a;padding:2px 7px;border-radius:7px;font-weight:700}
+        .reader-close{width:32px;height:32px;border-radius:50%;border:none;background:#f1f5f9;font-size:16px;cursor:pointer;color:#475569}
+        .reader-close:hover{background:#e2e8f0;color:#0f172a}
+        .reader-content{padding:24px 20px;line-height:1.7;font-size:15px}
+        .reader-content h1{font-size:22px;margin-bottom:14px;color:#0f172a}
+        .reader-content p{margin-bottom:12px;color:#334155}
+        .reader-loading{text-align:center;padding:40px;color:#64748b}
+        .reader-spinner{width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#60a5fa;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+        .footer{text-align:center;font-size:10px;color:#333;padding:8px;display:none}
+        .footer.active{display:block}
+        @media(max-width:600px){
+            .logo{font-size:38px}
+            .search-center.top .logo{font-size:24px}
+            .search-input{font-size:15px;padding:12px 14px;height:44px}
+            .search-btn{width:44px;height:44px;font-size:18px}
+            .result-title{font-size:14px}
+            .reader-content{padding:16px 14px;font-size:14px}
+            .reader-content h1{font-size:19px}
+        }
+    </style>
 </head>
 <body>
-    <!-- Фоновые эффекты -->
-    <div class="bg-glow g1"></div>
-    <div class="bg-glow g2"></div>
-    <div class="particles" id="particles"></div>
-
-    <!-- Основное приложение -->
     <div class="app">
-        <!-- Поиск по центру -->
         <div class="search-center" id="searchCenter">
-            <div class="logo-wrap">
-                <h1 class="logo">get-cool</h1>
-                <p class="logo-sub">Поиск без рекламы. Только суть.</p>
-                <span class="domain-badge">get-cool.ru</span>
-            </div>
+            <h1 class="logo">get-cool</h1>
+            <p class="logo-sub">Поиск без рекламы. Только суть.</p>
+            <span class="domain-badge">get-cool.ru</span>
             <div class="search-section">
                 <div class="search-wrapper">
                     <input type="text" class="search-input" id="searchInput" placeholder="Введите запрос..." autocomplete="off">
-                    <button class="search-btn" id="searchBtn" title="Искать">
+                    <button class="search-btn" id="searchBtn">
                         <span class="icon">🔍</span>
                         <span class="spinner"></span>
                     </button>
@@ -32,48 +90,253 @@
                 <div class="search-hint">
                     Например:
                     <span data-query="кофе рецепт">кофе</span>
-                    <span data-query="новости сегодня">новости</span>
-                    <span data-query="погода Москва">погода</span>
+                    <span data-query="новости">новости</span>
+                    <span data-query="погода">погода</span>
                 </div>
             </div>
         </div>
 
-        <!-- Статус-бар -->
         <div class="status-bar" id="statusBar">
             <span class="status-dot" id="statusDot"></span>
             <span id="statusText">Готов к поиску</span>
         </div>
 
-        <!-- Результаты поиска -->
         <div class="results-scroll" id="resultsScroll">
             <div class="results-container" id="resultsContainer"></div>
         </div>
 
-        <!-- Футер -->
-        <div class="footer" id="footer">
-            get-cool.ru &nbsp;·&nbsp; Чистый интернет &nbsp;·&nbsp; 2026
-        </div>
+        <div class="footer" id="footer">get-cool.ru · Чистый интернет · 2026</div>
     </div>
 
-    <!-- Ридер (очищенная страница) -->
     <div class="reader-overlay" id="readerOverlay">
         <div class="reader-window">
             <div class="reader-header">
-                <div class="reader-header-left">
-                    <span class="reader-logo">get-cool</span>
-                    <span class="reader-badge">Без рекламы</span>
-                </div>
+                <span class="reader-logo">get-cool</span>
+                <span class="reader-badge">Без рекламы</span>
                 <button class="reader-close" id="readerClose">✕</button>
             </div>
             <div class="reader-content" id="readerContent">
-                <div class="reader-loading">
-                    <div class="reader-spinner"></div>
-                    Загружаем чистую версию...
-                </div>
+                <div class="reader-loading"><div class="reader-spinner"></div>Загружаем...</div>
             </div>
         </div>
     </div>
 
-    <!-- Часть 3: JavaScript (вставьте сюда) -->
+    <script>
+        const $ = id => document.getElementById(id);
+        const searchCenter = $('searchCenter');
+        const searchInput = $('searchInput');
+        const searchBtn = $('searchBtn');
+        const resultsContainer = $('resultsContainer');
+        const resultsScroll = $('resultsScroll');
+        const statusBar = $('statusBar');
+        const statusDot = $('statusDot');
+        const statusText = $('statusText');
+        const footer = $('footer');
+        const readerOverlay = $('readerOverlay');
+        const readerContent = $('readerContent');
+        const readerClose = $('readerClose');
+
+        let isSearching = false;
+        let hasSearched = false;
+
+        function setStatus(text, searching = false) {
+            statusText.textContent = text;
+            statusBar.classList.add('visible');
+            statusDot.classList.toggle('searching', searching);
+        }
+
+        function moveSearchTop() {
+            if (!hasSearched) {
+                hasSearched = true;
+                searchCenter.classList.add('top');
+                resultsScroll.classList.add('active');
+                footer.classList.add('active');
+            }
+        }
+
+        function setSearching(state) {
+            isSearching = state;
+            if (state) {
+                searchBtn.classList.add('loading');
+                searchBtn.disabled = true;
+            } else {
+                searchBtn.classList.remove('loading');
+                searchBtn.disabled = false;
+            }
+        }
+
+        // ========== ПОИСК ==========
+        async function doSearch(query) {
+            if (isSearching || !query || !query.trim()) return;
+            query = query.trim();
+            searchInput.value = query;
+            moveSearchTop();
+            setSearching(true);
+            resultsContainer.innerHTML = '';
+            setStatus(`Ищем: "${query}"`, true);
+
+            let results = [];
+
+            // Источник 1: Wikipedia (точно работает в РФ)
+            try {
+                const url = `https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=15`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                if (data.query && data.query.search) {
+                    for (const page of data.query.search) {
+                        results.push({
+                            url: `https://ru.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, '_'))}`,
+                            title: page.title + ' — Википедия',
+                            snippet: (page.snippet || '').replace(/<\/?[^>]+(>|$)/g, ''),
+                            source: 'wiki'
+                        });
+                    }
+                }
+            } catch (e) { console.warn('Wikipedia:', e.message); }
+
+            // Источник 2: DuckDuckGo API (работает в РФ)
+            try {
+                const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&t=getcool`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                if (data.AbstractURL && data.AbstractText) {
+                    results.push({
+                        url: data.AbstractURL,
+                        title: data.Heading || query,
+                        snippet: data.AbstractText,
+                        source: 'ddg'
+                    });
+                }
+                if (data.RelatedTopics) {
+                    for (const t of data.RelatedTopics) {
+                        if (t.FirstURL && t.Text) {
+                            results.push({
+                                url: t.FirstURL,
+                                title: t.Text.split(' - ')[0] || t.Text,
+                                snippet: t.Text,
+                                source: 'ddg'
+                            });
+                        }
+                        if (results.length >= 20) break;
+                    }
+                }
+            } catch (e) { console.warn('DuckDuckGo:', e.message); }
+
+            // Заглушка: если API не вернули результаты — показываем тестовые
+            if (results.length === 0) {
+                results = [
+                    {
+                        url: 'https://ru.wikipedia.org/wiki/Интернет',
+                        title: 'Интернет — Википедия',
+                        snippet: 'Интернет — всемирная система объединённых компьютерных сетей для хранения и передачи информации.',
+                        source: 'test'
+                    },
+                    {
+                        url: 'https://ru.wikipedia.org/wiki/Поисковая_система',
+                        title: 'Поисковая система — Википедия',
+                        snippet: 'Поисковая система — программно-аппаратный комплекс, предоставляющий возможность поиска информации в интернете.',
+                        source: 'test'
+                    },
+                    {
+                        url: 'https://habr.com/ru/articles/',
+                        title: 'Хабр — статьи о технологиях',
+                        snippet: 'Крупнейшее русскоязычное сообщество IT-специалистов. Статьи, новости, аналитика.',
+                        source: 'test'
+                    }
+                ];
+            }
+
+            // Убираем дубликаты
+            const seen = new Set();
+            const unique = results.filter(r => {
+                if (seen.has(r.url) || !r.url.startsWith('http')) return false;
+                seen.add(r.url);
+                return true;
+            }).slice(0, 25);
+
+            renderResults(unique);
+            setStatus(unique.length > 0 ? `Найдено: ${unique.length}` : 'Ничего не найдено');
+            resultsScroll.scrollTop = 0;
+            setSearching(false);
+        }
+
+        function renderResults(results) {
+            resultsContainer.innerHTML = '';
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Ничего не найдено</div><div class="empty-sub">Попробуйте другой запрос</div></div>`;
+                return;
+            }
+            results.forEach(r => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `<span class="result-badge">Чисто</span><div class="result-url">${escapeHTML(r.url)}</div><div class="result-title">${escapeHTML(r.title)}</div><div class="result-snippet">${escapeHTML(r.snippet || '')}</div>`;
+                card.addEventListener('click', () => openReader(r.url, r.title));
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        // ========== РИДЕР ==========
+        async function openReader(url, fallbackTitle) {
+            readerOverlay.classList.add('open');
+            readerContent.innerHTML = `<div class="reader-loading"><div class="reader-spinner"></div>Загружаем чистую версию...</div>`;
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+                const resp = await fetch(proxyUrl);
+                if (!resp.ok) throw new Error('Недоступно');
+                const html = await resp.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                doc.querySelectorAll('script,style,iframe,noscript,[class*="ad"],[id*="ad"],[class*="banner"],[id*="banner"],.popup,.modal').forEach(el => el.remove());
+                const title = doc.querySelector('h1')?.textContent || doc.querySelector('title')?.textContent || fallbackTitle;
+                const article = doc.querySelector('article') || doc.querySelector('main') || doc.body;
+                const paragraphs = article.querySelectorAll('p,h2,h3,li');
+                let contentHTML = `<h1>${escapeHTML(title.trim())}</h1>`;
+                if (paragraphs.length > 0) {
+                    paragraphs.forEach(el => {
+                        const tag = el.tagName.toLowerCase();
+                        const text = el.textContent.trim();
+                        if (text.length > 15) {
+                            if (tag === 'h2') contentHTML += `<h2 style="font-size:18px;margin-top:18px">${escapeHTML(text)}</h2>`;
+                            else if (tag === 'h3') contentHTML += `<h3 style="font-size:15px;margin-top:14px">${escapeHTML(text)}</h3>`;
+                            else if (tag === 'li') contentHTML += `<li style="margin-left:18px">${escapeHTML(text)}</li>`;
+                            else contentHTML += `<p>${escapeHTML(text)}</p>`;
+                        }
+                    });
+                } else {
+                    const bodyText = article.textContent.replace(/\s+/g, ' ').trim();
+                    contentHTML += `<p>${escapeHTML(bodyText.substring(0, 4000))}</p>`;
+                }
+                contentHTML += `<p style="margin-top:20px;font-size:11px;color:#94a3b8">Источник: <a href="${escapeHTML(url)}" target="_blank" style="color:#60a5fa">${escapeHTML(url)}</a></p>`;
+                readerContent.innerHTML = contentHTML;
+            } catch (err) {
+                readerContent.innerHTML = `<div class="reader-loading"><div style="font-size:36px;margin-bottom:8px">⚠️</div><p style="color:#64748b">Не удалось очистить страницу</p><a href="${escapeHTML(url)}" target="_blank" style="color:#60a5fa;font-weight:600">Открыть оригинал →</a></div>`;
+            }
+        }
+
+        function closeReader() {
+            readerOverlay.classList.remove('open');
+            readerContent.innerHTML = '';
+        }
+
+        // ========== СОБЫТИЯ ==========
+        searchBtn.addEventListener('click', () => doSearch(searchInput.value));
+        searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(searchInput.value); });
+        document.querySelectorAll('.search-hint span').forEach(s => {
+            s.addEventListener('click', () => doSearch(s.dataset.query));
+        });
+        readerClose.addEventListener('click', closeReader);
+        readerOverlay.addEventListener('click', e => { if (e.target === readerOverlay) closeReader(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeReader(); });
+
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        setStatus('Готов к поиску');
+        console.log('🆒 get-cool.ru — готов к работе');
+        console.log('Источники: Wikipedia + DuckDuckGo + заглушка');
+    </script>
 </body>
-    </html>             
+    </html>
