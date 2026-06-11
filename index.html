@@ -10,27 +10,32 @@
         .app{height:100%;display:flex;flex-direction:column;align-items:center;overflow:hidden}
         .search-center{flex:1;width:100%;max-width:680px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .4s}
         .search-center.top{flex:0 0 auto;padding-top:30px;padding-bottom:10px}
-        .logo{font-size:52px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:font-size .4s}
-        .search-center.top .logo{font-size:30px}
+        .logo{font-size:48px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:font-size .4s}
+        .search-center.top .logo{font-size:28px}
         .logo-sub{font-size:14px;color:#888;margin-top:4px}
         .domain-badge{background:#13131d;border:1px solid #1e1e2e;border-radius:20px;padding:4px 14px;font-size:12px;color:#60a5fa;margin-top:6px}
-        .search-box{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:4px 8px;margin-top:16px;width:100%;transition:.25s}
+        .search-box{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:4px 6px;margin-top:16px;width:100%;transition:.25s}
         .search-box:focus-within{border-color:#60a5fa;box-shadow:0 0 30px rgba(96,165,250,.1)}
-        .search-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .search-icon svg{width:22px;height:22px;fill:#888}
+        .search-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;border-radius:50%;transition:.2s}
+        .search-icon:hover{background:#ffffff08}
+        .search-icon svg{width:20px;height:20px;fill:#888}
         .search-box:focus-within .search-icon svg{fill:#60a5fa}
         .search-input{flex:1;padding:10px 4px;font-size:17px;background:transparent;border:none;color:#fff;outline:none;min-width:0}
         .search-input::placeholder{color:#555}
-        .search-clear{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:#666;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center}
+        .search-clear{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:#666;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;flex-shrink:0}
         .search-clear.show{display:flex}
-        .search-divider{width:1px;height:24px;background:#1e1e2e;margin:0 8px}
-        .search-btn{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,#60a5fa,#a78bfa);cursor:pointer;display:flex;align-items:center;justify-content:center}
-        .search-btn svg{width:18px;height:18px;fill:#0a0a10}
-        .search-btn:disabled{opacity:.5}
-        .search-btn .spinner{display:none;width:18px;height:18px;border:2px solid #0a0a10;border-top-color:transparent;border-radius:50%;animation:s .7s linear infinite}
-        .search-btn.loading .s-icon{display:none}
-        .search-btn.loading .spinner{display:block}
-        @keyframes s{to{transform:rotate(360deg)}}
+        .search-clear:hover{color:#fff;background:#ffffff10}
+
+        /* Фильтр-галочка */
+        .filter-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:#888}
+        .filter-row label{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
+        .filter-row label input{display:none}
+        .check-box{width:18px;height:18px;border:2px solid #444;border-radius:5px;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+        .check-box svg{width:12px;height:12px;fill:#4ade80;display:none}
+        .filter-row label input:checked+.check-box{border-color:#4ade80;background:#4ade80}
+        .filter-row label input:checked+.check-box svg{display:block;fill:#fff}
+        .filter-hint{color:#666;font-size:11px}
+
         .hint{text-align:center;font-size:12px;color:#555;margin-top:8px}
         .hint span{color:#888;cursor:pointer;text-decoration:underline;margin:0 4px}
         .hint span:hover{color:#60a5fa}
@@ -66,9 +71,10 @@
         .rcontent p{margin-bottom:12px;color:#334155}
         .rload{text-align:center;padding:40px;color:#64748b}
         .rspin{width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#60a5fa;border-radius:50%;animation:s .8s linear infinite;margin:0 auto 12px}
+        @keyframes s{to{transform:rotate(360deg)}}
         .foot{text-align:center;font-size:10px;color:#333;padding:8px;display:none}
         .foot.on{display:block}
-        @media(max-width:600px){.logo{font-size:38px}.search-center.top .logo{font-size:24px}.search-input{font-size:15px}.ctitle{font-size:14px}}
+        @media(max-width:600px){.logo{font-size:34px}.search-center.top .logo{font-size:22px}.search-input{font-size:15px}.ctitle{font-size:14px}}
     </style>
 </head>
 <body>
@@ -78,21 +84,26 @@
             <p class="logo-sub">Поиск без рекламы. Только суть.</p>
             <span class="domain-badge">get-cool.ru</span>
             <div class="search-box" id="sb">
-                <div class="search-icon"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+                <!-- ОДНА лупа слева, она же кнопка поиска -->
+                <div class="search-icon" id="searchIcon" title="Искать">
+                    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                </div>
                 <input class="search-input" id="si" placeholder="Введите запрос..." autocomplete="off">
                 <button class="search-clear" id="sclear">×</button>
-                <div class="search-divider"></div>
-                <button class="search-btn" id="sbtn">
-                    <svg class="s-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                    <span class="spinner"></span>
-                </button>
+            </div>
+            <!-- Галочка -->
+            <div class="filter-row">
+                <label>
+                    <input type="checkbox" id="showAds" checked>
+                    <span class="check-box"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+                    <span>Показывать сайты с рекламой</span>
+                </label>
+                <span class="filter-hint">(если выключено — только чистые)</span>
             </div>
             <div class="hint">Например: <span data-q="кофе">кофе</span> <span data-q="новости">новости</span> <span data-q="погода">погода</span></div>
         </div>
         <div class="status" id="st"><span class="status-dot" id="sd"></span><span id="stx">Готов к поиску</span></div>
-        <div class="results" id="rs">
-            <div class="list" id="rl"></div>
-        </div>
+        <div class="results" id="rs"><div class="list" id="rl"></div></div>
         <div class="foot" id="ft">get-cool.ru · Чистый интернет · 2026</div>
     </div>
     <div class="reader-overlay" id="ro">
@@ -106,7 +117,8 @@
         const sc = $('sc'),
             si = $('si'),
             scl = $('sclear'),
-            sb = $('sbtn'),
+            searchIcon = $('searchIcon'),
+            showAds = $('showAds'),
             rl = $('rl'),
             rs = $('rs'),
             st = $('st'),
@@ -118,11 +130,27 @@
             rc = $('rc');
         let searching = false,
             searched = false;
+
         const CLEAN = ['wikipedia.org', 'habr.com', 'github.com', 'stackoverflow.com', 'arxiv.org', 'gitlab.com',
-        'developer.mozilla.org'];
+            'developer.mozilla.org', 'openstreetmap.org', 'archive.org', 'pypi.org', 'npmjs.com'
+        ];
+
+        // Популярные сайты (могут содержать рекламу)
+        const POPULAR = ['rbc.ru', 'ria.ru', 'lenta.ru', 'vedomosti.ru', 'kommersant.ru', 'tass.ru', 'interfax.ru',
+            'gazeta.ru', 'fontanka.ru', 'mk.ru', 'kp.ru', 'iz.ru', 'rg.ru', 'meduza.io', 'bbc.com', 'cnn.com',
+            'nytimes.com', 'washingtonpost.com', 'theguardian.com', 'bloomberg.com', 'reuters.com', 'forbes.ru',
+            'vc.ru', 'tjournal.ru', 'dtf.ru', 'pikabu.ru', 'youtube.com', 'twitch.tv', 'netflix.com', 'kinopoisk.ru',
+            'ivi.ru', 'okko.tv', 'litres.ru', 'ozon.ru', 'wildberries.ru', 'avito.ru', 'cian.ru', 'hh.ru',
+            'habr.com', 'stackoverflow.com', 'reddit.com', 'twitter.com', 'telegram.org', 'vk.com', 'ok.ru',
+            'instagram.com', 'facebook.com', 'tiktok.com', 'spotify.com', 'apple.com', 'microsoft.com', 'google.com',
+            'yandex.ru', 'mail.ru', 'rambler.ru', 'gazeta.ru', 'sports.ru', 'championat.com', 'matchtv.ru'
+        ];
 
         function isClean(url) { try { const h = new URL(url).hostname.replace('www.', ''); return CLEAN.some(c => h === c ||
-                h.endsWith('.' + c)) } catch { return false } }
+                    h.endsWith('.' + c)) } catch { return false } }
+
+        function isPopular(url) { try { const h = new URL(url).hostname.replace('www.', ''); return POPULAR.some(p => h ===
+                    p || h.endsWith('.' + p)) } catch { return false } }
 
         function esc(s) { const d = document.createElement('div');
             d.textContent = s; return d.innerHTML }
@@ -149,11 +177,11 @@
             toggleClear();
             moveTop();
             searching = true;
-            sb.classList.add('loading');
-            sb.disabled = true;
             rl.innerHTML = '';
             setStatus(`Ищем: "${q}"`, true);
             let results = [];
+
+            // Wikipedia
             try {
                 const r = await fetch(
                     `https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=10`
@@ -162,6 +190,8 @@
                 if (d.query?.search) d.query.search.forEach(p => results.push({ url: `https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,
                     title: p.title, snippet: (p.snippet || '').replace(/<\/?[^>]+(>|$)/g, ''), source: 'wiki' }))
             } catch (e) {}
+
+            // DuckDuckGo
             try {
                 const r = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&t=gc`);
                 const d = await r.json();
@@ -172,10 +202,27 @@
                 if (d.Results) d.Results.forEach(r => { if (r.FirstURL && r.Text) results.push({ url: r.FirstURL,
                         title: r.Text.split(' - ')[0], snippet: r.Text, source: 'ddg' }) })
             } catch (e) {}
-            if (!results.length) results = [{ url: 'https://habr.com/ru/', title: 'Хабр', snippet: 'IT-сообщество',
-                    source: 'test' }, { url: 'https://ru.wikipedia.org/', title: 'Википедия',
-                    snippet: 'Свободная энциклопедия', source: 'test' }, { url: 'https://github.com', title: 'GitHub',
-                    snippet: 'Платформа для разработки', source: 'test' }];
+
+            // Заглушка: популярные сайты + чистые
+            if (results.length < 5) {
+                const dummy = [
+                    { url: 'https://ru.wikipedia.org/wiki/Заглавная_страница', title: 'Википедия',
+                    snippet: 'Свободная энциклопедия.', source: 'test' },
+                    { url: 'https://habr.com/ru/', title: 'Хабр', snippet: 'IT-сообщество.', source: 'test' },
+                    { url: 'https://github.com', title: 'GitHub', snippet: 'Платформа для разработки.',
+                    source: 'test' },
+                    { url: 'https://rbc.ru', title: 'РБК', snippet: 'Новости России и мира.', source: 'test' },
+                    { url: 'https://ria.ru', title: 'РИА Новости', snippet: 'События в России и мире.',
+                        source: 'test' },
+                    { url: 'https://lenta.ru', title: 'Лента.ру', snippet: 'Новости дня.', source: 'test' },
+                    { url: 'https://vc.ru', title: 'VC.ru', snippet: 'Бизнес и технологии.', source: 'test' },
+                    { url: 'https://dtf.ru', title: 'DTF', snippet: 'Игры и разработка.', source: 'test' },
+                    { url: 'https://pikabu.ru', title: 'Пикабу', snippet: 'Развлекательный портал.',
+                    source: 'test' },
+                ];
+                dummy.forEach(d => { if (!results.find(r => r.url === d.url)) results.push(d) });
+            }
+
             const seen = new Set();
             const clean = [],
                 ads = [];
@@ -183,23 +230,34 @@
                 if (!r.url?.startsWith('http') || seen.has(r.url)) return;
                 seen.add(r.url);
                 r.isClean = isClean(r.url);
-                (r.isClean ? clean : ads).push(r)
+                (r.isClean ? clean : ads).push(r);
             });
-            const sorted = [...clean, ...ads].slice(0, 20);
+
+            // Сортируем: чистые сверху
+            let sorted;
+            if (showAds.checked) {
+                sorted = [...clean, ...ads];
+            } else {
+                sorted = clean;
+            }
+            sorted = sorted.slice(0, 25);
+
             rl.innerHTML = '';
-            sorted.forEach(r => {
-                const c = document.createElement('div');
-                c.className = 'card ' + (r.isClean ? 'clean' : 'ads');
-                c.innerHTML =
-                    `<div class="cinfo"><div class="curl">${esc(r.url)}</div><div class="ctitle">${esc(r.title)}</div><div class="csnip">${esc(r.snippet||'')}</div></div><span class="badge ${r.isClean?'clean':'ads'}">${r.isClean?'✓ Чисто':'⚠ Реклама'}</span>`;
-                c.addEventListener('click', () => openReader(r.url, r.title));
-                rl.appendChild(c)
-            });
+            if (!sorted.length) {
+                rl.innerHTML = '<div class="empty"><div style="font-size:44px">🔍</div><p>Ничего не найдено</p></div>';
+            } else {
+                sorted.forEach(r => {
+                    const c = document.createElement('div');
+                    c.className = 'card ' + (r.isClean ? 'clean' : 'ads');
+                    c.innerHTML =
+                        `<div class="cinfo"><div class="curl">${esc(r.url)}</div><div class="ctitle">${esc(r.title)}</div><div class="csnip">${esc(r.snippet||'')}</div></div><span class="badge ${r.isClean?'clean':'ads'}">${r.isClean?'✓ Чисто':'⚠ Реклама'}</span>`;
+                    c.addEventListener('click', () => openReader(r.url, r.title));
+                    rl.appendChild(c);
+                });
+            }
             setStatus(`Найдено: ${sorted.length} (Чистых: ${clean.length})`);
             rs.scrollTop = 0;
             searching = false;
-            sb.classList.remove('loading');
-            sb.disabled = false
         }
 
         async function openReader(url, title) {
@@ -223,16 +281,23 @@
                 else o += `<p>${esc(a.textContent.replace(/\s+/g,' ').trim().substring(0,4000))}</p>`;
                 o +=
                     `<p style="margin-top:20px;font-size:11px;color:#94a3b8">Источник: <a href="${esc(url)}" target="_blank" style="color:#60a5fa">${esc(url)}</a></p>`;
-                rct.innerHTML = o
-            } catch (e) { rct.innerHTML =
-                    `<div class="rload"><div style="font-size:36px">⚠️</div><p>Не удалось очистить</p><a href="${esc(url)}" target="_blank" style="color:#60a5fa">Открыть оригинал →</a></div>` }
+                rct.innerHTML = o;
+            } catch (e) {
+                rct.innerHTML =
+                    `<div class="rload"><div style="font-size:36px">⚠️</div><p>Не удалось очистить</p><a href="${esc(url)}" target="_blank" style="color:#60a5fa">Открыть оригинал →</a></div>`;
+            }
         }
 
         function closeReader() { ro.classList.remove('open');
             rct.innerHTML = '' }
-        sb.addEventListener('click', () => doSearch(si.value));
+
+        // События
+        searchIcon.addEventListener('click', () => doSearch(si.value));
         si.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(si.value) });
         document.querySelectorAll('.hint span').forEach(s => s.addEventListener('click', () => doSearch(s.dataset.q)));
+        showAds.addEventListener('change', () => {
+            if (searched && si.value.trim()) doSearch(si.value);
+        });
         rc.addEventListener('click', closeReader);
         ro.addEventListener('click', e => { if (e.target === ro) closeReader() });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeReader() });
@@ -240,4 +305,4 @@
         setStatus('Готов к поиску');
     </script>
 </body>
-        </html>
+</html>
