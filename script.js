@@ -340,4 +340,49 @@
                 contentHTML += `<p style="margin-top:20px;font-size:11px;color:#94a3b8;">Источник: <a href="${escapeHTML(url)}" target="_blank" rel="noopener" style="color:#60a5fa;">${escapeHTML(truncateUrl(url))}</a></p>`;
                 readerContent.innerHTML = contentHTML;
             } catch (err) {
-                console.error('Ошибка ридера
+                console.error('Ошибка ридера:', err);
+                readerContent.innerHTML = `
+                    <div class="reader-loading">
+                        <div style="font-size:36px;margin-bottom:8px;">⚠️</div>
+                        <p style="color:#64748b;">Не удалось очистить страницу</p>
+                        <a href="${escapeHTML(url)}" target="_blank" rel="noopener" style="color:#60a5fa;font-weight:600;">Открыть оригинал →</a>
+                    </div>`;
+            }
+        }
+
+        function closeReader() {
+            readerOverlay.classList.remove('open');
+            readerContent.innerHTML = '';
+        }
+
+        readerClose.addEventListener('click', closeReader);
+        readerOverlay.addEventListener('click', (e) => {
+            if (e.target === readerOverlay) closeReader();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && readerOverlay.classList.contains('open')) closeReader();
+        });
+
+        // ========== Утилиты ==========
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function truncateUrl(url) {
+            try {
+                const u = new URL(url);
+                return u.hostname + u.pathname.substring(0, 28) + (u.pathname.length > 28 ? '…' : '');
+            } catch {
+                return url.substring(0, 40) + (url.length > 40 ? '…' : '');
+            }
+        }
+
+        // ========== Инициализация ==========
+        setStatus('Готов к поиску');
+        console.log('%c🆒 get-cool.ru %c— поиск работает в РФ', 'font-size:16px;font-weight:bold;color:#60a5fa;', 'color:#aaa;');
+        console.log('%cИсточники: DuckDuckGo + Wikipedia + Google CSE + SearXNG', 'color:#4ade80;font-size:11px;');
+        console.log('%cНажмите на лупу или Enter для поиска', 'color:#888;font-size:11px;');
+    })();
+</script>
