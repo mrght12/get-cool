@@ -11,35 +11,36 @@
         .home{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:15vh}
         .logo{font-size:56px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
         .logo-sub{font-size:15px;color:#888;margin-bottom:24px}
-        .sbox{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:6px 10px;width:100%;max-width:600px;transition:.25s}
-        .sbox:focus-within{border-color:#60a5fa}
+        .sbox{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:6px 10px;width:100%;max-width:600px;transition:.3s}
+        .sbox:focus-within{border-color:#60a5fa;box-shadow:0 0 35px rgba(96,165,250,.15)}
         .sicon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%}
-        .sicon svg{width:22px;height:22px;fill:#888}
-        .sbox:focus-within .sicon svg{fill:#60a5fa}
+        .sicon svg{width:22px;height:22px;fill:#888}.sbox:focus-within .sicon svg{fill:#60a5fa}
         .sinp{flex:1;padding:10px 6px;font-size:17px;background:transparent;border:none;color:#fff;outline:none}
         .sinp::placeholder{color:#555}
         .sclr{width:34px;height:34px;border-radius:50%;border:none;background:transparent;color:#666;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center}
         .sclr.on{display:flex}
         .btns{display:flex;gap:12px;margin-top:20px}
-        .btn1{padding:10px 24px;background:#13131d;border:1px solid #1e1e2e;border-radius:22px;color:#ccc;font-size:14px;cursor:pointer}
+        .btn1{padding:10px 24px;background:#13131d;border:1px solid #1e1e2e;border-radius:22px;color:#ccc;font-size:14px;cursor:pointer;transition:.2s}
         .btn1:hover{background:#1a1a28}
-        .btn2{padding:10px 24px;background:linear-gradient(135deg,#a78bfa,#60a5fa);border:none;border-radius:22px;color:#fff;font-size:14px;cursor:pointer;font-weight:600}
+        .btn2{padding:10px 24px;background:linear-gradient(135deg,#a78bfa,#60a5fa);border:none;border-radius:22px;color:#fff;font-size:14px;cursor:pointer;font-weight:600;transition:.2s}
+        .btn2:hover{opacity:.9}
         .hint{font-size:12px;color:#555;margin-top:16px}
-        .hint span{color:#888;cursor:pointer;margin:0 3px}
+        .hint span{color:#888;cursor:pointer;margin:0 3px}.hint span:hover{color:#60a5fa}
+
         .res-page{display:none;flex:1;flex-direction:column;padding-top:18px}
         .res-page.on{display:flex}
         .top-bar{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid #1e1e2e;margin-bottom:14px;flex-wrap:wrap}
         .logo-sm{font-size:24px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
-        .sbox-sm{display:flex;align-items:center;background:#13131d;border:1px solid #1e1e2e;border-radius:24px;padding:3px 8px;flex:1;min-width:200px}
+        .sbox-sm{display:flex;align-items:center;background:#13131d;border:1px solid #1e1e2e;border-radius:24px;padding:3px 8px;flex:1;min-width:200px;transition:.3s}
         .sbox-sm:focus-within{border-color:#60a5fa}
         .sicon-sm{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer}
         .sicon-sm svg{width:18px;height:18px;fill:#888}
         .sinp-sm{flex:1;padding:8px 4px;font-size:14px;background:transparent;border:none;color:#fff;outline:none}
         .sclr-sm{width:28px;height:28px;border-radius:50%;border:none;background:transparent;color:#666;font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center}
         .sclr-sm.on{display:flex}
-        .ai-btn{padding:8px 16px;background:linear-gradient(135deg,#a78bfa,#60a5fa);border:none;border-radius:20px;color:#fff;font-size:12px;cursor:pointer;font-weight:600;white-space:nowrap}
+        .ai-btn{padding:8px 16px;background:linear-gradient(135deg,#a78bfa,#60a5fa);border:none;border-radius:20px;color:#fff;font-size:12px;cursor:pointer;font-weight:600}
         .filters{display:flex;gap:6px;margin-bottom:10px;align-items:center;font-size:11px;color:#888}
-        .filters label{display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none}
+        .filters label{display:flex;align-items:center;gap:5px;cursor:pointer}
         .filters input{display:none}
         .cb{width:15px;height:15px;border:2px solid #444;border-radius:3px;display:flex;align-items:center;justify-content:center}
         .cb svg{width:9px;height:9px;fill:#4ade80;display:none}
@@ -47,13 +48,14 @@
         .filters input:checked+.cb svg{display:block;fill:#fff}
         .stats{font-size:11px;color:#666;margin-bottom:10px}
         .list{display:flex;flex-direction:column;gap:16px;padding-bottom:30px}
-        .card{display:flex;gap:12px;cursor:pointer}
+        .card{cursor:pointer;padding:8px 0;border-radius:8px;transition:.2s}
         .card:hover .ct{text-decoration:underline}
-        .cu{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;display:flex;align-items:center;gap:6px}
-        .bd{font-size:8px;padding:1px 6px;border-radius:6px;font-weight:700}
+        .cu{font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+        .bd{font-size:8px;padding:2px 7px;border-radius:6px;font-weight:700}
         .bd.g{background:#22c55e18;color:#4ade80}.bd.y{background:#f59e0b18;color:#fbbf24}
-        .ct{font-size:18px;color:#60a5fa;margin-bottom:3px}
-        .cs{font-size:13px;color:#888;line-height:1.5}
+        .ct{font-size:18px;color:#60a5fa;margin-bottom:4px;line-height:1.3}
+        .cs{font-size:13px;color:#888;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
         .bover{position:fixed;inset:0;background:#000e;z-index:100;display:none;flex-direction:column}
         .bover.on{display:flex}
         .btop{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#13131d;border-bottom:1px solid #1e1e2e}
@@ -61,6 +63,7 @@
         .bbtn{width:34px;height:34px;border-radius:50%;border:none;background:#1e1e2e;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
         .bbtn:hover{background:#333}.bbtn.x{background:#f8717120;color:#f87171}
         .bframe{flex:1;width:100%;border:none;background:#fff}
+
         .aiover{position:fixed;inset:0;background:#000e;z-index:200;display:none;align-items:center;justify-content:center}
         .aiover.on{display:flex}
         .aiwin{width:100%;max-width:650px;height:85vh;background:#13131d;border:1px solid #1e1e2e;border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
@@ -68,7 +71,7 @@
         .aititle{font-weight:800;font-size:20px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .aiclose{width:36px;height:36px;border-radius:50%;border:none;background:#f8717120;color:#f87171;cursor:pointer;font-size:18px}
         .aichat{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
-        .aimsg{max-width:82%;padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.5;animation:fi .3s}
+        .aimsg{max-width:85%;padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.5;animation:fi .3s}
         .aimsg.u{align-self:flex-end;background:linear-gradient(135deg,#60a5fa,#a78bfa);color:#fff}
         .aimsg.b{align-self:flex-start;background:#1e1e2e}
         .aitype{align-self:flex-start;padding:12px 16px;background:#1e1e2e;border-radius:16px;display:flex;gap:4px}
@@ -78,7 +81,9 @@
         @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
         .airow{display:flex;gap:10px;padding:14px 20px;border-top:1px solid #1e1e2e}
         .aiinp{flex:1;padding:12px 16px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:24px;color:#fff;font-size:14px;outline:none}
+        .aiinp:focus{border-color:#a78bfa}
         .aisend{width:42px;height:42px;border-radius:50%;border:none;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#fff;cursor:pointer;font-size:18px}
+        .aisend:disabled{opacity:.4}
         .foot{text-align:center;font-size:10px;color:#333;padding:12px;margin-top:auto}
         @media(max-width:600px){.logo{font-size:40px}.top-bar{gap:8px}.logo-sm{font-size:20px}.aiwin{height:92vh;border-radius:12px}}
     </style>
@@ -108,7 +113,7 @@
                     <input class="sinp-sm" id="siSm" placeholder="Введите запрос..." autocomplete="off">
                     <button class="sclr-sm" id="sclrSm">×</button>
                 </div>
-                <button class="ai-btn" id="aiBtnRes">🧠 Cool AI</button>
+                <button class="ai-btn" id="aiBtnRes">🧠 AI</button>
             </div>
             <div class="filters"><label><input type="checkbox" id="showAds" checked><span class="cb"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>Сайты с рекламой</label></div>
             <div class="stats" id="stats"></div>
@@ -121,7 +126,7 @@
         <div class="btop">
             <button class="bbtn" id="bback">←</button><button class="bbtn" id="bfwd">→</button><button class="bbtn" id="brel">↻</button>
             <div class="burl" id="burl"></div>
-            <button class="bbtn" id="bclean">✨</button><button class="bbtn x" id="bclose">✕</button>
+            <button class="bbtn x" id="bclose">✕</button>
         </div>
         <iframe class="bframe" id="bframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
@@ -129,8 +134,8 @@
     <div class="aiover" id="aiover">
         <div class="aiwin">
             <div class="aihead"><span class="aititle">🧠 Cool AI</span><button class="aiclose" id="aiclose">✕</button></div>
-            <div class="aichat" id="aichat"><div class="aimsg b">Привет! Я Cool AI — ваш помощник. Задайте любой вопрос.</div></div>
-            <div class="airow"><input class="aiinp" id="aiinp" placeholder="Спросите что-нибудь..." autocomplete="off"><button class="aisend" id="aisend">➤</button></div>
+            <div class="aichat" id="aichat"><div class="aimsg b">Привет! Я Cool AI. Могу искать новости, погоду, факты из интернета. Спросите что угодно!</div></div>
+            <div class="airow"><input class="aiinp" id="aiinp" placeholder="Спросите о новостях, погоде, чём угодно..." autocomplete="off"><button class="aisend" id="aisend">➤</button></div>
         </div>
     </div>
 
@@ -144,7 +149,6 @@
         function isClean(u){try{const h=new URL(u).hostname.replace('www.','');return CLEAN.some(c=>h===c||h.endsWith('.'+c))}catch{return false}}
         function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
         function tgl(inp,clr){clr.classList.toggle('on',inp.value.length>0)}
-
         siMain.addEventListener('input',()=>tgl(siMain,sclrMain));
         sclrMain.addEventListener('click',()=>{siMain.value='';tgl(siMain,sclrMain);siMain.focus()});
         siSm.addEventListener('input',()=>tgl(siSm,sclrSm));
@@ -162,9 +166,9 @@
             if(results.length<5){[{url:'https://ru.wikipedia.org',title:'Википедия',snippet:'Свободная энциклопедия.'},{url:'https://habr.com',title:'Хабр',snippet:'IT-сообщество.'},{url:'https://github.com',title:'GitHub',snippet:'Разработка.'},{url:'https://rbc.ru',title:'РБК',snippet:'Новости.'},{url:'https://vc.ru',title:'VC.ru',snippet:'Бизнес.'}].forEach(d=>{if(!results.find(r=>r.url===d.url))results.push(d)})}
             const seen=new Set(),clean=[],ads=[];results.forEach(r=>{if(!r.url?.startsWith('http')||seen.has(r.url))return;seen.add(r.url);r.isClean=isClean(r.url);(r.isClean?clean:ads).push(r)});
             let sorted=showAds.checked?[...clean,...ads]:clean;sorted=sorted.slice(0,20);
-            stats.textContent=`Найдено: ${sorted.length} (✓ чистых: ${clean.length})`;
-            list.innerHTML=sorted.length?'':`<div class="empty" style="text-align:center;padding:40px;color:#888"><div style="font-size:40px">🔍</div><p>Ничего не найдено</p></div>`;
-            sorted.forEach(r=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div style="flex:1"><div class="cu">${esc(r.url)}<span class="bd ${r.isClean?'g':'y'}">${r.isClean?'✓ Чисто':'⚠ Реклама'}</span></div><div class="ct">${esc(r.title)}</div><div class="cs">${esc(r.snippet||'')}</div></div>`;c.addEventListener('click',()=>openBrowser(r.url));list.appendChild(c)});
+            stats.textContent=`Результатов: ${sorted.length} (✓ чистых: ${clean.length})`;
+            list.innerHTML=sorted.length?'':`<div style="text-align:center;padding:40px;color:#888"><div style="font-size:40px">🔍</div><p>Ничего не найдено</p></div>`;
+            sorted.forEach(r=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div class="cu">${esc(r.url.replace(/^https?:\/\//,'').replace(/\/.*/,''))}<span class="bd ${r.isClean?'g':'y'}">${r.isClean?'✓':'⚠'}</span></div><div class="ct">${esc(r.title)}</div><div class="cs">${esc(r.snippet||'')}</div>`;c.addEventListener('click',()=>openBrowser(r.url));list.appendChild(c)});
             searching=false;
         }
 
@@ -174,7 +178,6 @@
         $('bback').addEventListener('click',()=>{if(bidx>0){bidx--;const u=bhist[bidx];burl.textContent=u;bframe.src=u}});
         $('bfwd').addEventListener('click',()=>{if(bidx<bhist.length-1){bidx++;const u=bhist[bidx];burl.textContent=u;bframe.src=u}});
         $('brel').addEventListener('click',()=>{bframe.src=bframe.src});
-        $('bclean').addEventListener('click',()=>{burl.textContent='Очищено';bframe.src='about:blank'});
 
         function openAI(){aiover.classList.add('on');aiinp.focus()}
         function closeAI(){aiover.classList.remove('on')}
@@ -186,9 +189,24 @@
         function addMsg(t,p){const m=document.createElement('div');m.className='aimsg '+p;m.textContent=t;aichat.appendChild(m);aichat.scrollTop=aichat.scrollHeight}
         function showType(){const d=document.createElement('div');d.className='aitype';d.id='aitype';d.innerHTML='<span></span><span></span><span></span>';aichat.appendChild(d);aichat.scrollTop=aichat.scrollHeight}
         function hideType(){const t=$('aitype');if(t)t.remove()}
+
         async function sendAI(){
             const t=aiinp.value.trim();if(!t)return;aiinp.value='';addMsg(t,'u');showType();aisend.disabled=true;
-            setTimeout(()=>{hideType();const q=t.toLowerCase();let a='Попробуйте спросить иначе.';if(q.includes('привет'))a='Привет! Я Cool AI.';else if(q.includes('зовут'))a='Я Cool AI — помощник get-cool.ru.';else if(q.includes('умеешь'))a='Отвечаю на вопросы, помогаю искать.';else if(q.includes('погода'))a='Проверьте на Gismeteo.';addMsg(a,'b');aisend.disabled=false},800);
+            setTimeout(async()=>{
+                hideType();const q=t.toLowerCase();let a='';
+                // Пробуем найти ответ через DuckDuckGo
+                try{
+                    const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(t)}&format=json&no_html=1&t=coolai`);
+                    const d=await r.json();
+                    if(d.AbstractText&&d.AbstractText.length>30){a=d.AbstractText.substring(0,500)+(d.AbstractURL?`\n\nПодробнее: ${d.AbstractURL}`:'')}
+                    else if(d.RelatedTopics&&d.RelatedTopics.length>0){
+                        a='Вот что нашлось:\n';
+                        d.RelatedTopics.slice(0,5).forEach((t,i)=>a+=`\n${i+1}. ${t.Text.split(' - ')[0].substring(0,100)}${t.FirstURL?' — '+t.FirstURL:''}`)
+                    }
+                    else a='Ничего не найдено по вашему запросу. Попробуйте спросить иначе.';
+                }catch(e){a='Не удалось подключиться к поиску. Проверьте интернет.'}
+                addMsg(a,'b');aisend.disabled=false;
+            },600);
         }
         aisend.addEventListener('click',sendAI);aiinp.addEventListener('keydown',e=>{if(e.key==='Enter')sendAI()});
 
