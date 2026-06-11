@@ -3,206 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>get-cool.ru — Чистый поиск</title>
+    <title>get-cool.ru</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0a0a10;color:#d4d4d8;font-family:system-ui,sans-serif}
-        .app{height:100%;display:flex;flex-direction:column;align-items:center;overflow:hidden}
-        .search-center{flex:1;width:100%;max-width:680px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .4s}
-        .search-center.top{flex:0 0 auto;padding-top:30px;padding-bottom:10px}
-        .logo{font-size:48px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:font-size .4s}
-        .search-center.top .logo{font-size:28px}
-        .logo-sub{font-size:14px;color:#888;margin-top:4px}
-        .domain-badge{background:#13131d;border:1px solid #1e1e2e;border-radius:20px;padding:4px 14px;font-size:12px;color:#60a5fa;margin-top:6px;display:inline-block}
-        .search-box{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:4px 6px;margin-top:16px;width:100%;transition:.25s}
-        .search-box:focus-within{border-color:#60a5fa;box-shadow:0 0 30px rgba(96,165,250,.1)}
-        .search-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;border-radius:50%;transition:.2s}
-        .search-icon:hover{background:#ffffff08}
-        .search-icon svg{width:20px;height:20px;fill:#888}
-        .search-box:focus-within .search-icon svg{fill:#60a5fa}
-        .search-input{flex:1;padding:10px 4px;font-size:17px;background:transparent;border:none;color:#fff;outline:none;min-width:0}
-        .search-input::placeholder{color:#555}
-        .search-clear{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:#666;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;flex-shrink:0}
-        .search-clear.show{display:flex}
-        .search-clear:hover{color:#fff;background:#ffffff10}
-        .filter-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:#888}
-        .filter-row label{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
-        .filter-row label input{display:none}
-        .check-box{width:18px;height:18px;border:2px solid #444;border-radius:5px;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
-        .check-box svg{width:12px;height:12px;fill:#4ade80;display:none}
-        .filter-row label input:checked+.check-box{border-color:#4ade80;background:#4ade80}
-        .filter-row label input:checked+.check-box svg{display:block;fill:#fff}
-        .filter-hint{color:#666;font-size:11px}
-        .hint{text-align:center;font-size:12px;color:#555;margin-top:8px}
-        .hint span{color:#888;cursor:pointer;text-decoration:underline;margin:0 4px}
-        .hint span:hover{color:#60a5fa}
-        .status{display:flex;align-items:center;gap:8px;padding:6px 14px;background:#13131d;border:1px solid #1e1e2e;border-radius:20px;font-size:11px;color:#888;margin-top:6px;opacity:0;transition:.3s}
+        .app{height:100%;display:flex;flex-direction:column;overflow:hidden}
+        .top{width:100%;max-width:720px;margin:0 auto;padding:20px 20px 10px;display:flex;flex-direction:column;align-items:center;transition:.4s}
+        .top.up{padding-top:15px;padding-bottom:8px}
+        .logo{font-size:42px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer;transition:.4s}
+        .top.up .logo{font-size:24px}
+        .logo-sub{font-size:13px;color:#888}
+        .badges{display:flex;gap:8px;margin-top:6px}
+        .badge1{background:#13131d;border:1px solid #1e1e2e;border-radius:20px;padding:4px 12px;font-size:11px;color:#60a5fa}
+        .badge2{background:linear-gradient(135deg,#a78bfa,#60a5fa);border-radius:20px;padding:4px 12px;font-size:11px;color:#fff;cursor:pointer;font-weight:600}
+        .sbox{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:4px 6px;margin-top:12px;width:100%;transition:.25s}
+        .sbox:focus-within{border-color:#60a5fa;box-shadow:0 0 30px rgba(96,165,250,.1)}
+        .sicon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;border-radius:50%}
+        .sicon svg{width:20px;height:20px;fill:#888}
+        .sbox:focus-within .sicon svg{fill:#60a5fa}
+        .sinp{flex:1;padding:10px 4px;font-size:16px;background:transparent;border:none;color:#fff;outline:none;min-width:0}
+        .sinp::placeholder{color:#555}
+        .sclr{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:#666;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center}
+        .sclr.on{display:flex}
+        .frow{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11px;color:#888}
+        .frow label{display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none}
+        .frow label input{display:none}
+        .cb{width:16px;height:16px;border:2px solid #444;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:.2s}
+        .cb svg{width:10px;height:10px;fill:#4ade80;display:none}
+        .frow label input:checked+.cb{border-color:#4ade80;background:#4ade80}
+        .frow label input:checked+.cb svg{display:block;fill:#fff}
+        .hint{text-align:center;font-size:11px;color:#555;margin-top:6px}
+        .hint span{color:#888;cursor:pointer;text-decoration:underline;margin:0 3px}
+        .status{display:flex;align-items:center;gap:6px;padding:5px 12px;background:#13131d;border:1px solid #1e1e2e;border-radius:20px;font-size:10px;color:#888;margin:4px auto;opacity:0;transition:.3s;width:fit-content}
         .status.on{opacity:1}
-        .status-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:b 1.5s infinite}
-        .status-dot.searching{background:#fbbf24;animation:b .5s infinite}
+        .sd{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:b 1.5s infinite}
+        .sd.s{background:#fbbf24;animation:b .5s infinite}
         @keyframes b{0%,100%{opacity:1}50%{opacity:.3}}
-        .results{display:none;flex:1;width:100%;max-width:780px;padding:0 20px;overflow-y:auto;min-height:0}
-        .results.on{display:block}
-        .list{display:flex;flex-direction:column;gap:8px;padding-bottom:20px}
-        .card{background:#13131d;border:1px solid #1e1e2e;border-radius:14px;padding:14px 16px;cursor:pointer;transition:.25s;display:flex;gap:12px}
-        .card:hover{transform:translateY(-2px);border-color:#fff2}
-        .card.clean{border-left:3px solid #4ade80}
-        .card.ads{border-left:3px solid #f59e0b44;opacity:.85}
-        .cinfo{flex:1;min-width:0}
-        .curl{font-size:10px;color:#60a5fa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
-        .ctitle{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px}
-        .csnip{font-size:12px;color:#888;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-        .badge{font-size:9px;padding:3px 8px;border-radius:8px;font-weight:700;white-space:nowrap;height:fit-content}
-        .badge.clean{background:#22c55e18;color:#4ade80}
-        .badge.ads{background:#f59e0b18;color:#fbbf24}
-        .empty{text-align:center;padding:40px;color:#888}
-        .foot{text-align:center;font-size:10px;color:#333;padding:8px;display:none}
-        .foot.on{display:block}
-        @media(max-width:600px){.logo{font-size:34px}.search-center.top .logo{font-size:22px}.search-input{font-size:15px}.ctitle{font-size:14px}}
+        .main{flex:1;display:flex;overflow:hidden;min-height:0}
+        .res{flex:1;max-width:780px;margin:0 auto;padding:0 20px;overflow-y:auto;display:none}
+        .res.on{display:block}
+        .list{display:flex;flex-direction:column;gap:6px;padding-bottom:20px}
+        .card{background:#13131d;border:1px solid #1e1e2e;border-radius:12px;padding:12px 14px;cursor:pointer;transition:.2s;display:flex;gap:10px}
+        .card:hover{transform:translateY(-1px);border-color:#fff2}
+        .card.cl{border-left:3px solid #4ade80}
+        .card.ad{border-left:3px solid #f59e0b44;opacity:.85}
+        .ci{flex:1;min-width:0}
+        .cu{font-size:9px;color:#60a5fa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px}
+        .ct{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px}
+        .cs{font-size:11px;color:#888;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        .bd{font-size:8px;padding:2px 7px;border-radius:7px;font-weight:700;white-space:nowrap;height:fit-content}
+        .bd.g{background:#22c55e18;color:#4ade80}
+        .bd.y{background:#f59e0b18;color:#fbbf24}
+        .bover{position:fixed;inset:0;background:#000e;z-index:100;display:none;flex-direction:column}
+        .bover.on{display:flex}
+        .btop{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#13131d;border-bottom:1px solid #1e1e2e}
+        .burl{flex:1;padding:8px 14px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:20px;font-size:12px;color:#aaa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .bbtn{width:34px;height:34px;border-radius:50%;border:none;background:#1e1e2e;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+        .bbtn:hover{background:#333}
+        .bbtn.x{background:#f8717120;color:#f87171}
+        .bframe{flex:1;width:100%;border:none;background:#fff}
+        .aiover{position:fixed;inset:0;background:#000e;z-index:200;display:none;align-items:center;justify-content:center}
+        .aiover.on{display:flex}
+        .aiwin{width:100%;max-width:600px;max-height:80vh;background:#13131d;border:1px solid #1e1e2e;border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
+        .aihead{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #1e1e2e}
+        .aititle{font-weight:800;font-size:18px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .aiclose{width:32px;height:32px;border-radius:50%;border:none;background:#f8717120;color:#f87171;cursor:pointer;font-size:16px}
+        .aichat{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;min-height:150px;max-height:350px}
+        .aimsg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;animation:fi .3s}
+        .aimsg.u{align-self:flex-end;background:linear-gradient(135deg,#60a5fa,#a78bfa);color:#fff}
+        .aimsg.b{align-self:flex-start;background:#1e1e2e;color:#d4d4d8}
+        .aitype{align-self:flex-start;padding:10px 14px;background:#1e1e2e;border-radius:14px;display:flex;gap:4px}
+        .aitype span{width:6px;height:6px;background:#888;border-radius:50%;animation:tb 1.4s infinite}
+        .aitype span:nth-child(2){animation-delay:.2s}
+        .aitype span:nth-child(3){animation-delay:.4s}
+        @keyframes tb{0%,80%,100%{transform:scale(1);opacity:.4}40%{transform:scale(1.3);opacity:1}}
+        @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .airow{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #1e1e2e}
+        .aiinp{flex:1;padding:10px 14px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:22px;color:#fff;font-size:13px;outline:none}
+        .aisend{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#fff;cursor:pointer;font-size:16px;flex-shrink:0}
+        .aisend:disabled{opacity:.4}
+        .empty{text-align:center;padding:30px;color:#888}
+        .foot{text-align:center;font-size:9px;color:#333;padding:6px}
+        @media(max-width:600px){.logo{font-size:30px}.top.up .logo{font-size:20px}.sinp{font-size:14px}.ct{font-size:13px}.aiwin{max-height:90vh;margin:10px}}
     </style>
 </head>
 <body>
     <div class="app">
-        <div class="search-center" id="sc">
-            <h1 class="logo">get-cool</h1>
+        <div class="top" id="sc">
+            <h1 class="logo" id="logoBtn">get-cool</h1>
             <p class="logo-sub">Поиск без рекламы. Только суть.</p>
-            <span class="domain-badge">get-cool.ru</span>
-            <div class="search-box" id="sb">
-                <div class="search-icon" id="searchIcon" title="Искать">
-                    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                </div>
-                <input class="search-input" id="si" placeholder="Введите запрос..." autocomplete="off">
-                <button class="search-clear" id="sclear">×</button>
+            <div class="badges"><span class="badge1">get-cool.ru</span><span class="badge2" id="aiBtn">🧠 Cool AI</span></div>
+            <div class="sbox" id="sb">
+                <div class="sicon" id="searchIcon"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+                <input class="sinp" id="si" placeholder="Введите запрос..." autocomplete="off">
+                <button class="sclr" id="sclr">×</button>
             </div>
-            <div class="filter-row">
-                <label>
-                    <input type="checkbox" id="showAds" checked>
-                    <span class="check-box"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
-                    <span>Показывать сайты с рекламой</span>
-                </label>
-                <span class="filter-hint">(выкл — только чистые)</span>
-            </div>
-            <div class="hint">Например: <span data-q="кофе">кофе</span> <span data-q="новости">новости</span> <span data-q="погода">погода</span></div>
+            <div class="frow"><label><input type="checkbox" id="showAds" checked><span class="cb"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>Сайты с рекламой</label></div>
+            <div class="hint"><span data-q="кофе">кофе</span> · <span data-q="новости">новости</span> · <span data-q="погода">погода</span></div>
         </div>
-        <div class="status" id="st"><span class="status-dot" id="sd"></span><span id="stx">Готов к поиску</span></div>
-        <div class="results" id="rs"><div class="list" id="rl"></div></div>
-        <div class="foot" id="ft">get-cool.ru · Чистый интернет · 2026</div>
+        <div class="status" id="st"><span class="sd" id="sd"></span><span id="stx">Готов</span></div>
+        <div class="main"><div class="res" id="rs"><div class="list" id="rl"></div></div></div>
+        <div class="foot">get-cool.ru · Cool AI · 2026</div>
+    </div>
+    <div class="bover" id="bover">
+        <div class="btop">
+            <button class="bbtn" id="bback">←</button>
+            <button class="bbtn" id="bfwd">→</button>
+            <button class="bbtn" id="brel">↻</button>
+            <div class="burl" id="burl"></div>
+            <button class="bbtn" id="bclean">✨</button>
+            <button class="bbtn x" id="bclose">✕</button>
+        </div>
+        <iframe class="bframe" id="bframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+    </div>
+    <div class="aiover" id="aiover">
+        <div class="aiwin">
+            <div class="aihead"><span class="aititle">🧠 Cool AI</span><button class="aiclose" id="aiclose">✕</button></div>
+            <div class="aichat" id="aichat"><div class="aimsg b">Привет! Я Cool AI. Задайте вопрос, и я помогу.</div></div>
+            <div class="airow"><input class="aiinp" id="aiinp" placeholder="Спросите что-нибудь..." autocomplete="off"><button class="aisend" id="aisend">➤</button></div>
+        </div>
     </div>
     <script>
-        const $ = id => document.getElementById(id);
-        const sc = $('sc'), si = $('si'), scl = $('sclear'), searchIcon = $('searchIcon'), showAds = $('showAds');
-        const rl = $('rl'), rs = $('rs'), st = $('st'), sd = $('sd'), stx = $('stx'), ft = $('ft');
-        let searching = false, searched = false;
+        const $=id=>document.getElementById(id);
+        const sc=$('sc'),si=$('si'),sclr=$('sclr'),searchIcon=$('searchIcon'),showAds=$('showAds');
+        const rl=$('rl'),rs=$('rs'),st=$('st'),sd=$('sd'),stx=$('stx');
+        const bover=$('bover'),bframe=$('bframe'),burl=$('burl');
+        const aiover=$('aiover'),aichat=$('aichat'),aiinp=$('aiinp'),aisend=$('aisend');
+        let searching=false,searched=false,bhist=[],bidx=-1;
 
-        // Чистые сайты (без рекламы)
-        const CLEAN = ['wikipedia.org','habr.com','github.com','stackoverflow.com','arxiv.org','gitlab.com','developer.mozilla.org','openstreetmap.org','archive.org','pypi.org','npmjs.com','gist.github.com','docs.python.org','nodejs.org','rust-lang.org','golang.org','kubernetes.io','docker.com','react.dev','vuejs.org','angular.io','svelte.dev','tailwindcss.com','getbootstrap.com','d3js.org','chartjs.org','threejs.org','codepen.io','jsfiddle.net','codesandbox.io','replit.com','glitch.com','netlify.com','vercel.com','heroku.com','digitalocean.com','linode.com','cloudflare.com','fast.com','speedtest.net','whatismyip.com','caniuse.com','browserstack.com','lighthouse-metrics.com','web.dev','css-tricks.com','smashingmagazine.com','alistapart.com','freecodecamp.org','codecademy.com','khanacademy.org','coursera.org','edx.org','udemy.com','pluralsight.com','udacity.com','datacamp.com','leetcode.com','hackerrank.com','codewars.com','topcoder.com','codeforces.com','atcoder.jp','projecteuler.net','sqlite.org','postgresql.org','mysql.com','mariadb.org','mongodb.com','redis.io','elastic.co','nginx.com','apache.org','letsencrypt.org','eff.org','moz://a.org','webkit.org','chromium.org','brave.com','vivaldi.com','torproject.org','proton.me','signal.org','element.io','matrix.org','jitsi.org','bigbluebutton.org','opencollective.com','liberapay.com','patreon.com','ko-fi.com','buymeacoffee.com','internetarchive.org','wikimedia.org','wikibooks.org','wikiversity.org','wikisource.org','wikidata.org','openlibrary.org','librivox.org','gutenberg.org','standardebooks.org','plos.org','doaj.org','arxiv.org','biorxiv.org','medrxiv.org','chemrxiv.org','researchgate.net','orcid.org','zenodo.org','figshare.com','datadryad.org','osf.io'];
+        const CLEAN=['wikipedia.org','habr.com','github.com','stackoverflow.com','arxiv.org','gitlab.com','developer.mozilla.org','openstreetmap.org','archive.org','pypi.org','npmjs.com','gist.github.com','react.dev','vuejs.org','svelte.dev','codepen.io','freecodecamp.org','khanacademy.org','leetcode.com','proton.me','signal.org','eff.org','cloudflare.com','fast.com','caniuse.com','sqlite.org','redis.io','digitalocean.com','vercel.com','netlify.com','replit.com','jsfiddle.net','getbootstrap.com','tailwindcss.com'];
 
-        function isClean(url){try{const h=new URL(url).hostname.replace('www.','');return CLEAN.some(c=>h===c||h.endsWith('.'+c))}catch{return false}}
-
+        function isClean(u){try{const h=new URL(u).hostname.replace('www.','');return CLEAN.some(c=>h===c||h.endsWith('.'+c))}catch{return false}}
         function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
-        function toggleClear(){scl.classList.toggle('show',si.value.length>0)}
-        si.addEventListener('input',toggleClear);
-        scl.addEventListener('click',()=>{si.value='';toggleClear();si.focus()});
-        function setStatus(t,s=false){stx.textContent=t;st.classList.add('on');sd.classList.toggle('searching',s)}
-        function moveTop(){if(!searched){searched=true;sc.classList.add('top');rs.classList.add('on');ft.classList.add('on')}}
+        function tgl(){sclr.classList.toggle('on',si.value.length>0)}
+        si.addEventListener('input',tgl);sclr.addEventListener('click',()=>{si.value='';tgl();si.focus()});
+        function setStatus(t,s=false){stx.textContent=t;st.classList.add('on');sd.classList.toggle('s',s)}
+        function moveTop(){if(!searched){searched=true;sc.classList.add('up');rs.classList.add('on')}}
 
         async function doSearch(q){
-            if(searching||!q||!q.trim())return;
-            q=q.trim();si.value=q;toggleClear();moveTop();searching=true;rl.innerHTML='';setStatus(`Ищем: "${q}"`,true);
+            if(searching||!q||!q.trim())return;q=q.trim();si.value=q;tgl();moveTop();searching=true;rl.innerHTML='';setStatus(`Ищем: "${q}"`,true);
             let results=[];
-
-            // Wikipedia
-            try{
-                const r=await fetch(`https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=15`);
-                const d=await r.json();
-                if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),source:'wiki'}));
-            }catch(e){}
-
-            // DuckDuckGo
-            try{
-                const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&t=getcool`);
-                const d=await r.json();
-                if(d.AbstractURL&&d.AbstractText)results.push({url:d.AbstractURL,title:d.Heading||q,snippet:d.AbstractText,source:'ddg'});
-                if(d.RelatedTopics)d.RelatedTopics.forEach(t=>{if(t.FirstURL&&t.Text)results.push({url:t.FirstURL,title:t.Text.split(' - ')[0]||t.Text,snippet:t.Text,source:'ddg'})});
-                if(d.Results)d.Results.forEach(r=>{if(r.FirstURL&&r.Text)results.push({url:r.FirstURL,title:r.Text.split(' - ')[0]||r.Text,snippet:r.Text,source:'ddg'})});
-            }catch(e){}
-
-            // Google CSE (публичный ключ)
-            try{
-                const r=await fetch(`https://www.googleapis.com/customsearch/v1?key=AIzaSyCJxYq5Vw0P2mPm0h6Kq8V3h0n0qO1hK9w&cx=017576662512468239146:omuauf_lfve&q=${encodeURIComponent(q)}&num=10`);
-                const d=await r.json();
-                if(d.items)d.items.forEach(i=>results.push({url:i.link,title:i.title,snippet:i.snippet||'',source:'google'}));
-            }catch(e){}
-
-            // Wikipedia EN
-            try{
-                const r=await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=10`);
-                const d=await r.json();
-                if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title+' — Wikipedia',snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),source:'wiki-en'}));
-            }catch(e){}
-
-            // Заглушка — популярные сайты по теме
-            if(results.length<5){
-                const dummy=[
-                    {url:'https://ru.wikipedia.org',title:'Википедия',snippet:'Свободная энциклопедия на русском языке.',source:'test'},
-                    {url:'https://habr.com/ru/',title:'Хабр',snippet:'Крупнейшее русскоязычное IT-сообщество.',source:'test'},
-                    {url:'https://github.com',title:'GitHub',snippet:'Платформа для хостинга и разработки проектов.',source:'test'},
-                    {url:'https://stackoverflow.com',title:'Stack Overflow',snippet:'Вопросы и ответы для программистов.',source:'test'},
-                    {url:'https://rbc.ru',title:'РБК',snippet:'Новости, актуальная информация о бизнесе и экономике.',source:'test'},
-                    {url:'https://ria.ru',title:'РИА Новости',snippet:'События в России и мире.',source:'test'},
-                    {url:'https://lenta.ru',title:'Лента.ру',snippet:'Новости дня, обзоры и аналитика.',source:'test'},
-                    {url:'https://vc.ru',title:'VC.ru',snippet:'Бизнес, технологии, идеи и рост.',source:'test'},
-                    {url:'https://dtf.ru',title:'DTF',snippet:'Игры, разработка, медиа и сообщество.',source:'test'},
-                    {url:'https://pikabu.ru',title:'Пикабу',snippet:'Развлекательный и информационный портал.',source:'test'},
-                    {url:'https://youtube.com',title:'YouTube',snippet:'Видеохостинг.',source:'test'},
-                    {url:'https://reddit.com',title:'Reddit',snippet:'Социальная сеть и форум.',source:'test'},
-                    {url:'https://twitter.com',title:'X (Twitter)',snippet:'Социальная сеть.',source:'test'},
-                    {url:'https://vk.com',title:'ВКонтакте',snippet:'Российская социальная сеть.',source:'test'},
-                    {url:'https://ok.ru',title:'Одноклассники',snippet:'Социальная сеть.',source:'test'},
-                    {url:'https://avito.ru',title:'Авито',snippet:'Объявления.',source:'test'},
-                    {url:'https://ozon.ru',title:'Ozon',snippet:'Интернет-магазин.',source:'test'},
-                    {url:'https://wildberries.ru',title:'Wildberries',snippet:'Маркетплейс.',source:'test'},
-                    {url:'https://hh.ru',title:'HeadHunter',snippet:'Поиск работы.',source:'test'},
-                    {url:'https://kinopoisk.ru',title:'Кинопоиск',snippet:'Фильмы и сериалы.',source:'test'},
-                ];
-                dummy.forEach(d=>{if(!results.find(r=>r.url===d.url))results.push(d)});
-            }
-
-            // Убираем дубликаты
-            const seen=new Set();
-            const all=results.filter(r=>{if(!r.url?.startsWith('http')||seen.has(r.url))return false;seen.add(r.url);return true});
-
-            // Разделяем на чистые и с рекламой
-            const clean=[],ads=[];
-            all.forEach(r=>{r.isClean=isClean(r.url);(r.isClean?clean:ads).push(r)});
-
-            let sorted=showAds.checked?[...clean,...ads]:clean;
-            sorted=sorted.slice(0,30);
-
-            rl.innerHTML='';
-            if(!sorted.length){
-                rl.innerHTML='<div class="empty"><div style="font-size:44px">🔍</div><p>Ничего не найдено</p></div>';
-            }else{
-                sorted.forEach(r=>{
-                    const c=document.createElement('div');
-                    c.className='card '+(r.isClean?'clean':'ads');
-                    c.innerHTML=`<div class="cinfo"><div class="curl">${esc(r.url)}</div><div class="ctitle">${esc(r.title)}</div><div class="csnip">${esc(r.snippet||'')}</div></div><span class="badge ${r.isClean?'clean':'ads'}">${r.isClean?'✓ Чисто':'⚠ Реклама'}</span>`;
-                    c.addEventListener('click',()=>window.open(r.url,'_blank'));
-                    rl.appendChild(c);
-                });
-            }
-            setStatus(`Найдено: ${sorted.length} (Чистых: ${clean.length})`);
-            rs.scrollTop=0;
-            searching=false;
+            try{const r=await fetch(`https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=12`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,'')}));}catch(e){}
+            try{const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&t=gc`);const d=await r.json();if(d.AbstractURL)results.push({url:d.AbstractURL,title:d.Heading||q,snippet:d.AbstractText});if(d.RelatedTopics)d.RelatedTopics.forEach(t=>{if(t.FirstURL)results.push({url:t.FirstURL,title:t.Text.split(' - ')[0],snippet:t.Text})});if(d.Results)d.Results.forEach(r=>{if(r.FirstURL)results.push({url:r.FirstURL,title:r.Text.split(' - ')[0],snippet:r.Text})});}catch(e){}
+            if(results.length<5){[{url:'https://ru.wikipedia.org',title:'Википедия',snippet:'Энциклопедия.'},{url:'https://habr.com',title:'Хабр',snippet:'IT-сообщество.'},{url:'https://github.com',title:'GitHub',snippet:'Разработка.'},{url:'https://rbc.ru',title:'РБК',snippet:'Новости.'},{url:'https://vc.ru',title:'VC.ru',snippet:'Бизнес.'}].forEach(d=>{if(!results.find(r=>r.url===d.url))results.push(d)})}
+            const seen=new Set(),clean=[],ads=[];results.forEach(r=>{if(!r.url?.startsWith('http')||seen.has(r.url))return;seen.add(r.url);r.isClean=isClean(r.url);(r.isClean?clean:ads).push(r)});
+            let sorted=showAds.checked?[...clean,...ads]:clean;sorted=sorted.slice(0,25);
+            rl.innerHTML=sorted.length?'':`<div class="empty"><div style="font-size:40px">🔍</div><p>Ничего не найдено</p></div>`;
+            sorted.forEach(r=>{const c=document.createElement('div');c.className='card '+(r.isClean?'cl':'ad');c.innerHTML=`<div class="ci"><div class="cu">${esc(r.url)}</div><div class="ct">${esc(r.title)}</div><div class="cs">${esc(r.snippet||'')}</div></div><span class="bd ${r.isClean?'g':'y'}">${r.isClean?'✓ Чисто':'⚠ Реклама'}</span>`;c.addEventListener('click',()=>openBrowser(r.url));rl.appendChild(c)});
+            setStatus(`Найдено: ${sorted.length}`);rs.scrollTop=0;searching=false;
         }
 
-        // События
+        function openBrowser(u){bover.classList.add('on');burl.textContent=u;bframe.src=u;bhist=bhist.slice(0,bidx+1);bhist.push(u);bidx=bhist.length-1}
+        function closeBrowser(){bover.classList.remove('on');bframe.src='';bhist=[];bidx=-1}
+        $('bclose').addEventListener('click',closeBrowser);
+        $('bback').addEventListener('click',()=>{if(bidx>0){bidx--;const u=bhist[bidx];burl.textContent=u;bframe.src=u}});
+        $('bfwd').addEventListener('click',()=>{if(bidx<bhist.length-1){bidx++;const u=bhist[bidx];burl.textContent=u;bframe.src=u}});
+        $('brel').addEventListener('click',()=>{bframe.src=bframe.src});
+        $('bclean').addEventListener('click',()=>{burl.textContent='Очищено';bframe.src='about:blank'});
+
+        function openAI(){aiover.classList.add('on');aiinp.focus()}
+        function closeAI(){aiover.classList.remove('on')}
+        $('aiBtn').addEventListener('click',openAI);$('aiclose').addEventListener('click',closeAI);
+        aiover.addEventListener('click',e=>{if(e.target===aiover)closeAI()});
+        document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAI();closeBrowser()}});
+
+        function addMsg(t,p){const m=document.createElement('div');m.className='aimsg '+p;m.textContent=t;aichat.appendChild(m);aichat.scrollTop=aichat.scrollHeight}
+        function showType(){const d=document.createElement('div');d.className='aitype';d.id='aitype';d.innerHTML='<span></span><span></span><span></span>';aichat.appendChild(d);aichat.scrollTop=aichat.scrollHeight}
+        function hideType(){const t=$('aitype');if(t)t.remove()}
+
+        async function sendAI(){
+            const t=aiinp.value.trim();if(!t)return;aiinp.value='';addMsg(t,'u');showType();aisend.disabled=true;
+            setTimeout(()=>{
+                hideType();
+                const q=t.toLowerCase();
+                let a='Попробуйте спросить иначе.';
+                if(q.includes('привет'))a='Привет! Я Cool AI. Чем помочь?';
+                else if(q.includes('как тебя зовут'))a='Я Cool AI — нейросеть поисковика get-cool.ru.';
+                else if(q.includes('что ты умеешь'))a='Я отвечаю на вопросы, помогаю с поиском, объясняю темы.';
+                else if(q.includes('погода'))a='Погоду пока не смотрю. Проверьте на Gismeteo или Яндекс.Погоде.';
+                addMsg(a,'b');aisend.disabled=false;
+            },800);
+        }
+        aisend.addEventListener('click',sendAI);aiinp.addEventListener('keydown',e=>{if(e.key==='Enter')sendAI()});
+
         searchIcon.addEventListener('click',()=>doSearch(si.value));
         si.addEventListener('keydown',e=>{if(e.key==='Enter')doSearch(si.value)});
         document.querySelectorAll('.hint span').forEach(s=>s.addEventListener('click',()=>doSearch(s.dataset.q)));
         showAds.addEventListener('change',()=>{if(searched&&si.value.trim())doSearch(si.value)});
-        toggleClear();
-        setStatus('Готов к поиску — все сайты');
+        $('logoBtn').addEventListener('click',()=>{if(searched){searched=false;sc.classList.remove('up');rs.classList.remove('on');rl.innerHTML='';si.value='';tgl();setStatus('Готов')}});
+        tgl();setStatus('Готов');
     </script>
 </body>
-</html>
+                </html>
