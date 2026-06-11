@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>get-cool.ru — Чистый поиск без рекламы</title>
     <style>
         :root {
@@ -13,7 +13,6 @@
             --text-secondary: #88889a;
             --accent: #60a5fa;
             --accent2: #a78bfa;
-            --danger: #f87171;
             --success: #4ade80;
             --radius: 14px;
             --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -25,15 +24,23 @@
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
         }
 
         /* ========== ФОН ========== */
@@ -116,26 +123,35 @@
             }
         }
 
-        /* ========== КОНТЕЙНЕР ========== */
-        .container {
+        /* ========== ВСЯ СТРАНИЦА ========== */
+        .app {
             position: relative;
             z-index: 1;
             width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* ========== ВЕРХНЯЯ ЧАСТЬ (всегда видна) ========== */
+        .top-section {
+            flex-shrink: 0;
+            width: 100%;
             max-width: 780px;
-            padding: 30px 20px;
+            padding: 25px 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* ========== ЛОГО ========== */
         .logo-wrap {
             text-align: center;
-            margin-top: 40px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .logo {
-            font-size: 54px;
+            font-size: 48px;
             font-weight: 900;
             letter-spacing: -1.5px;
             background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -154,7 +170,7 @@
             }
         }
         .logo-sub {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-secondary);
             font-weight: 400;
             letter-spacing: 1px;
@@ -166,25 +182,27 @@
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 4px 14px;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--accent);
-            margin-top: 6px;
-            letter-spacing: 0.5px;
+            margin-top: 4px;
         }
 
-        /* ========== ПОИСКОВАЯ СТРОКА ========== */
+        /* ========== ПОИСК ========== */
         .search-section {
             width: 100%;
-            margin: 24px 0;
+            margin: 14px 0 8px;
         }
         .search-wrapper {
             position: relative;
             width: 100%;
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
         .search-input {
-            width: 100%;
-            padding: 16px 56px 16px 22px;
-            font-size: 18px;
+            flex: 1;
+            padding: 14px 18px;
+            font-size: 16px;
             background: var(--surface);
             border: 2px solid var(--border);
             border-radius: var(--radius);
@@ -192,6 +210,7 @@
             outline: none;
             transition: var(--transition);
             letter-spacing: 0.3px;
+            height: 50px;
         }
         .search-input::placeholder {
             color: #555;
@@ -200,36 +219,62 @@
             border-color: var(--accent);
             box-shadow: 0 0 30px rgba(96, 165, 250, 0.12);
         }
-        .search-clear {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+
+        .search-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius);
             border: none;
-            background: transparent;
-            color: #666;
-            font-size: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #0a0a10;
+            font-size: 22px;
             cursor: pointer;
-            display: none;
+            transition: var(--transition);
+            flex-shrink: 0;
+            display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
+            font-weight: 700;
         }
-        .search-clear.visible {
-            display: flex;
+        .search-btn:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 25px rgba(96, 165, 250, 0.35);
         }
-        .search-clear:hover {
-            color: #fff;
-            background: #ffffff10;
+        .search-btn:active {
+            transform: scale(0.95);
         }
+        .search-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .search-btn .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #0a0a10;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .search-btn.loading .icon {
+            display: none;
+        }
+        .search-btn.loading .spinner {
+            display: block;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .search-hint {
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             color: #444;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .search-hint span {
             color: var(--text-secondary);
@@ -237,33 +282,34 @@
             text-decoration: underline;
             text-underline-offset: 3px;
             transition: var(--transition);
-            margin: 0 4px;
+            margin: 0 3px;
         }
         .search-hint span:hover {
             color: var(--accent);
         }
 
-        /* ========== СТАТУС-БАР ========== */
+        /* ========== СТАТУС ========== */
         .status-bar {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 18px;
+            gap: 8px;
+            padding: 6px 14px;
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 30px;
-            font-size: 13px;
+            border-radius: 20px;
+            font-size: 11px;
             color: var(--text-secondary);
-            margin-bottom: 20px;
             opacity: 0;
             transition: opacity 0.3s;
+            flex-shrink: 0;
+            margin-bottom: 6px;
         }
         .status-bar.visible {
             opacity: 1;
         }
         .status-dot {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: var(--success);
             animation: statusBlink 1.5s ease-in-out infinite;
@@ -282,49 +328,70 @@
             }
         }
 
-        /* ========== РЕЗУЛЬТАТЫ ========== */
-        .results-container {
+        /* ========== РЕЗУЛЬТАТЫ (скроллятся внутри) ========== */
+        .results-scroll {
+            flex: 1;
             width: 100%;
+            max-width: 780px;
+            padding: 0 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            min-height: 0;
+        }
+        .results-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .results-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .results-scroll::-webkit-scrollbar-thumb {
+            background: #ffffff15;
+            border-radius: 4px;
+        }
+
+        .results-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 8px;
+            padding-bottom: 20px;
         }
         .result-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 16px 20px;
+            padding: 14px 16px;
             cursor: pointer;
             transition: var(--transition);
             position: relative;
-            overflow: hidden;
         }
         .result-card:hover {
             border-color: #ffffff20;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
         .result-card:active {
             transform: scale(0.985);
         }
         .result-url {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--accent);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            padding-right: 55px;
         }
         .result-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
             color: #fff;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             line-height: 1.3;
         }
         .result-snippet {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
             line-height: 1.5;
             display: -webkit-box;
@@ -334,22 +401,40 @@
         }
         .result-badge {
             position: absolute;
-            top: 14px;
-            right: 16px;
-            font-size: 10px;
+            top: 12px;
+            right: 14px;
+            font-size: 9px;
             background: #22c55e18;
             color: var(--success);
-            padding: 3px 9px;
-            border-radius: 10px;
+            padding: 3px 8px;
+            border-radius: 8px;
             letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-        .result-card.no-clean .result-badge {
-            background: #f59e0b18;
-            color: #fbbf24;
+            font-weight: 700;
         }
 
-        /* ========== ОЧИЩЕННАЯ СТРАНИЦА (READER) ========== */
+        /* ========== ПУСТО ========== */
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+        }
+        .empty-icon {
+            font-size: 44px;
+            margin-bottom: 8px;
+            opacity: 0.6;
+        }
+        .empty-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: #ccc;
+        }
+        .empty-sub {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* ========== РИДЕР ========== */
         .reader-overlay {
             position: fixed;
             inset: 0;
@@ -370,7 +455,7 @@
             width: 100%;
             max-width: 720px;
             border-radius: var(--radius);
-            margin: 30px 0;
+            margin: 20px 0;
             overflow: hidden;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
             animation: readerSlideIn 0.35s ease;
@@ -387,7 +472,7 @@
         }
         .reader-header {
             background: #fff;
-            padding: 14px 20px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -399,31 +484,31 @@
         .reader-header-left {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .reader-logo {
             font-weight: 900;
-            font-size: 16px;
+            font-size: 15px;
             background: linear-gradient(135deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .reader-badge {
-            font-size: 10px;
+            font-size: 9px;
             background: #22c55e18;
             color: #16a34a;
-            padding: 3px 8px;
-            border-radius: 8px;
+            padding: 2px 7px;
+            border-radius: 7px;
             font-weight: 700;
         }
         .reader-close {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: none;
             background: #f1f5f9;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             transition: var(--transition);
             color: #475569;
@@ -436,150 +521,131 @@
             color: #0f172a;
         }
         .reader-content {
-            padding: 28px 26px;
-            line-height: 1.8;
-            font-size: 16px;
+            padding: 24px 20px;
+            line-height: 1.7;
+            font-size: 15px;
         }
         .reader-content h1 {
-            font-size: 26px;
-            margin-bottom: 16px;
+            font-size: 22px;
+            margin-bottom: 14px;
             line-height: 1.3;
             color: #0f172a;
         }
         .reader-content p {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             color: #334155;
-        }
-        .reader-content img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin: 12px 0;
         }
         .reader-loading {
             text-align: center;
-            padding: 50px;
+            padding: 40px;
             color: #64748b;
         }
         .reader-spinner {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border: 3px solid #e2e8f0;
             border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin: 0 auto 14px;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ========== ПУСТОЙ РЕЗУЛЬТАТ ========== */
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--text-secondary);
-        }
-        .empty-icon {
-            font-size: 56px;
-            margin-bottom: 14px;
-            opacity: 0.6;
-        }
-        .empty-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #ccc;
-        }
-        .empty-sub {
-            font-size: 13px;
-            color: #666;
+            margin: 0 auto 12px;
         }
 
         /* ========== ФУТЕР ========== */
         .footer {
             text-align: center;
-            font-size: 11px;
+            font-size: 10px;
             color: #333;
-            padding: 20px;
+            padding: 8px;
+            flex-shrink: 0;
             position: relative;
             z-index: 1;
-        }
-        .footer a {
-            color: var(--accent);
-            text-decoration: none;
         }
 
         /* ========== АДАПТИВ ========== */
         @media (max-width: 600px) {
             .logo {
-                font-size: 38px;
+                font-size: 34px;
             }
             .search-input {
-                font-size: 16px;
-                padding: 14px 48px 14px 16px;
+                font-size: 14px;
+                padding: 12px 14px;
+                height: 44px;
+            }
+            .search-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
             }
             .result-title {
-                font-size: 15px;
+                font-size: 14px;
             }
             .reader-content {
-                padding: 20px 16px;
-                font-size: 15px;
+                padding: 16px 14px;
+                font-size: 14px;
             }
             .reader-content h1 {
-                font-size: 21px;
+                font-size: 19px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Фоновые эффекты -->
+    <!-- Фон -->
     <div class="bg-glow g1"></div>
     <div class="bg-glow g2"></div>
     <div class="particles" id="particles"></div>
 
-    <!-- Основной контейнер -->
-    <div class="container">
-        <!-- Логотип -->
-        <div class="logo-wrap">
-            <h1 class="logo">get-cool</h1>
-            <p class="logo-sub">Поиск без рекламы. Только суть.</p>
-            <span class="domain-badge">get-cool.ru</span>
-        </div>
-
-        <!-- Поиск -->
-        <div class="search-section">
-            <div class="search-wrapper">
-                <input
-                type="text"
-                class="search-input"
-                id="searchInput"
-                placeholder="Введите поисковый запрос..."
-                autocomplete="off"
-                >
-                <button class="search-clear" id="searchClear" title="Очистить">×</button>
+    <!-- Приложение -->
+    <div class="app">
+        <!-- Верх -->
+        <div class="top-section">
+            <div class="logo-wrap">
+                <h1 class="logo">get-cool</h1>
+                <p class="logo-sub">Поиск без рекламы. Только суть.</p>
+                <span class="domain-badge">get-cool.ru</span>
             </div>
-            <div class="search-hint">
-                Например:
-                <span data-query="как приготовить кофе">кофе</span>
-                <span data-query="новости науки">наука</span>
-                <span data-query="рецепт блинов">блины</span>
+
+            <div class="search-section">
+                <div class="search-wrapper">
+                    <input
+                    type="text"
+                    class="search-input"
+                    id="searchInput"
+                    placeholder="Введите запрос..."
+                    autocomplete="off"
+                    >
+                    <button class="search-btn" id="searchBtn" title="Искать">
+                        <span class="icon">🔍</span>
+                        <span class="spinner"></span>
+                    </button>
+                </div>
+                <div class="search-hint">
+                    Например:
+                    <span data-query="кофе рецепт">кофе</span>
+                    <span data-query="новости">новости</span>
+                    <span data-query="погода">погода</span>
+                </div>
+            </div>
+
+            <div class="status-bar" id="statusBar">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Готов к поиску</span>
             </div>
         </div>
 
-        <!-- Статус -->
-        <div class="status-bar" id="statusBar">
-            <span class="status-dot" id="statusDot"></span>
-            <span id="statusText">Введите запрос</span>
+        <!-- Результаты (скроллятся) -->
+        <div class="results-scroll" id="resultsScroll">
+            <div class="results-container" id="resultsContainer"></div>
         </div>
 
-        <!-- Результаты -->
-        <div class="results-container" id="resultsContainer"></div>
+        <!-- Футер -->
+        <div class="footer">
+            get-cool.ru &nbsp;·&nbsp; Чистый интернет &nbsp;·&nbsp; 2026
+        </div>
     </div>
 
-    <!-- Очищенная страница (ридер) -->
+    <!-- Ридер -->
     <div class="reader-overlay" id="readerOverlay">
         <div class="reader-window">
             <div class="reader-header">
@@ -598,17 +664,13 @@
         </div>
     </div>
 
-    <!-- Футер -->
-    <div class="footer">
-        get-cool.ru &nbsp;·&nbsp; Поиск без рекламы и трекеров &nbsp;·&nbsp; 2026
-    </div>
-
     <script>
         (function() {
             // ========== DOM ==========
             const searchInput = document.getElementById('searchInput');
-            const searchClear = document.getElementById('searchClear');
+            const searchBtn = document.getElementById('searchBtn');
             const resultsContainer = document.getElementById('resultsContainer');
+            const resultsScroll = document.getElementById('resultsScroll');
             const statusBar = document.getElementById('statusBar');
             const statusDot = document.getElementById('statusDot');
             const statusText = document.getElementById('statusText');
@@ -617,55 +679,10 @@
             const readerClose = document.getElementById('readerClose');
             const hintSpans = document.querySelectorAll('.search-hint span[data-query]');
 
-            let searchTimer = null;
             let currentResults = [];
+            let isSearching = false;
 
-            // ========== ФОН: ЧАСТИЦЫ ==========
+            // ========== ЧАСТИЦЫ ==========
             const particlesEl = document.getElementById('particles');
-            for (let i = 0; i < 35; i++) {
-                const p = document.createElement('div');
-                p.classList.add('particle');
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDelay = Math.random() * 10 + 's';
-                p.style.animationDuration = (7 + Math.random() * 10) + 's';
-                particlesEl.appendChild(p);
-            }
-
-            // ========== СТАТУС-БАР ==========
-            function setStatus(text, searching = false) {
-                statusText.textContent = text;
-                statusBar.classList.add('visible');
-                statusDot.classList.toggle('searching', searching);
-            }
-
-            // ========== ОЧИСТКА ПОЛЯ ==========
-            function toggleClear() {
-                if (searchInput.value.length > 0) {
-                    searchClear.classList.add('visible');
-                } else {
-                    searchClear.classList.remove('visible');
-                }
-            }
-            searchInput.addEventListener('input', toggleClear);
-            searchClear.addEventListener('click', () => {
-                searchInput.value = '';
-                toggleClear();
-                searchInput.focus();
-                resultsContainer.innerHTML = '';
-                currentResults = [];
-                setStatus('Введите запрос');
-            });
-
-            // ========== ПОДСКАЗКИ-КЛИК ==========
-            hintSpans.forEach(span => {
-                span.addEventListener('click', () => {
-                    const q = span.getAttribute('data-query');
-                    searchInput.value = q;
-                    toggleClear();
-                    doSearch(q);
-                });
-            });
-
-            // ========== ПОИСК ==========
-            searchInput.addEventListener('keydown', (e) => {
-     
+            for (let i = 0; i < 30; i++) {
+                const p = document.createEleme
