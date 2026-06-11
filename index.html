@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GetCool — Чистый интернет без рекламы</title>
+    <title>get-cool.ru — Чистый поиск без рекламы</title>
     <style>
+        :root {
+            --bg: #0a0a10;
+            --surface: #13131d;
+            --border: #1e1e2e;
+            --text: #d4d4d8;
+            --text-secondary: #88889a;
+            --accent: #60a5fa;
+            --accent2: #a78bfa;
+            --danger: #f87171;
+            --success: #4ade80;
+            --radius: 14px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,570 +26,646 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0a0a0f;
-            color: #e0e0e0;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             overflow-x: hidden;
-            cursor: default;
         }
 
-        /* Анимированный фон */
-        .bg-grid {
+        /* ========== ФОН ========== */
+        .bg-glow {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(180px);
+            opacity: 0.12;
+            pointer-events: none;
             z-index: 0;
-            animation: gridMove 20s linear infinite;
         }
-
-        @keyframes gridMove {
-            0% {
+        .bg-glow.g1 {
+            top: -200px;
+            left: -200px;
+            background: #60a5fa;
+            animation: drift1 20s ease-in-out infinite;
+        }
+        .bg-glow.g2 {
+            bottom: -200px;
+            right: -200px;
+            background: #a78bfa;
+            animation: drift2 25s ease-in-out infinite;
+        }
+        @keyframes drift1 {
+            0%,
+            100% {
                 transform: translate(0, 0);
             }
+            33% {
+                transform: translate(80px, 40px);
+            }
+            66% {
+                transform: translate(-40px, -30px);
+            }
+        }
+        @keyframes drift2 {
+            0%,
             100% {
-                transform: translate(60px, 60px);
+                transform: translate(0, 0);
+            }
+            33% {
+                transform: translate(-60px, -50px);
+            }
+            66% {
+                transform: translate(50px, 30px);
             }
         }
 
         .particles {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+            inset: 0;
             pointer-events: none;
+            z-index: 0;
         }
-
         .particle {
             position: absolute;
             width: 2px;
             height: 2px;
-            background: rgba(100, 200, 255, 0.4);
+            background: var(--accent);
             border-radius: 50%;
-            animation: floatUp 8s linear infinite;
+            animation: rise linear infinite;
+            opacity: 0;
         }
-
-        @keyframes floatUp {
+        @keyframes rise {
             0% {
                 transform: translateY(100vh) scale(0);
                 opacity: 0;
             }
-            10% {
-                opacity: 1;
+            15% {
+                opacity: 0.7;
             }
-            90% {
-                opacity: 1;
+            85% {
+                opacity: 0.7;
             }
             100% {
-                transform: translateY(-100px) scale(1);
+                transform: translateY(-10vh) scale(1.2);
                 opacity: 0;
             }
         }
 
-        /* Основной контент */
+        /* ========== КОНТЕЙНЕР ========== */
         .container {
             position: relative;
             z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            min-height: 100vh;
+            width: 100%;
+            max-width: 780px;
+            padding: 30px 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            align-items: center;
         }
 
-        .hero {
+        /* ========== ЛОГО ========== */
+        .logo-wrap {
             text-align: center;
-            margin-bottom: 60px;
+            margin-top: 40px;
+            margin-bottom: 10px;
         }
-
         .logo {
-            font-size: 72px;
+            font-size: 54px;
             font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #64c8ff, #a78bfa);
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: logoGlow 3s ease-in-out infinite;
+            animation: logoPulse 4s ease-in-out infinite;
         }
-
-        @keyframes logoGlow {
+        @keyframes logoPulse {
             0%,
             100% {
                 filter: brightness(1);
             }
             50% {
-                filter: brightness(1.3);
+                filter: brightness(1.25);
             }
         }
-
-        .tagline {
-            font-size: 22px;
-            color: #999;
-            font-weight: 300;
-            margin-bottom: 8px;
+        .logo-sub {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-top: 2px;
         }
-
-        .subtitle {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 40px;
-        }
-
-        /* Окно демонстрации */
-        .demo-window {
-            background: #13131a;
-            border: 1px solid #222;
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 32px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .demo-window:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 30px 80px rgba(100, 150, 255, 0.15);
-        }
-
-        .demo-header {
-            background: #1a1a24;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid #222;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-        .dot.red {
-            background: #ff5f57;
-        }
-        .dot.yellow {
-            background: #ffbd2e;
-        }
-        .dot.green {
-            background: #28ca41;
-        }
-
-        .demo-url {
-            flex: 1;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            background: #0a0a0f;
-            padding: 6px 12px;
-            border-radius: 6px;
-        }
-
-        .demo-body {
-            padding: 24px;
-            display: flex;
-            gap: 2px;
-            min-height: 200px;
-        }
-
-        .demo-original {
-            flex: 1;
-            background: #1a1a24;
-            border-radius: 8px;
-            padding: 16px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .demo-original .label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #ff5f57;
-            margin-bottom: 12px;
-        }
-
-        .ad-block {
-            background: #ff5f5722;
-            border: 1px dashed #ff5f5744;
-            padding: 8px;
-            margin: 6px 0;
-            border-radius: 4px;
-            font-size: 10px;
-            color: #ff5f57;
-            text-align: center;
-            animation: adPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes adPulse {
-            0%,
-            100% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-
-        .text-line {
-            height: 4px;
-            background: #333;
-            margin: 8px 0;
-            border-radius: 2px;
-        }
-        .text-line.short {
-            width: 60%;
-        }
-        .text-line.medium {
-            width: 85%;
-        }
-
-        .demo-clean {
-            flex: 1;
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            color: #1a1a2e;
-            position: relative;
-        }
-
-        .demo-clean .label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #28ca41;
-            margin-bottom: 12px;
-        }
-
-        .clean-title {
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 12px;
-            color: #111;
-        }
-
-        .clean-text {
+        .domain-badge {
+            display: inline-block;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 14px;
             font-size: 13px;
-            color: #444;
-            line-height: 1.7;
+            color: var(--accent);
+            margin-top: 6px;
+            letter-spacing: 0.5px;
         }
 
-        .clean-text .line {
-            display: block;
-            height: 8px;
-            background: #ddd;
-            margin: 6px 0;
-            border-radius: 4px;
+        /* ========== ПОИСКОВАЯ СТРОКА ========== */
+        .search-section {
+            width: 100%;
+            margin: 24px 0;
         }
-        .clean-text .line.s1 {
-            width: 95%;
+        .search-wrapper {
+            position: relative;
+            width: 100%;
         }
-        .clean-text .line.s2 {
-            width: 88%;
+        .search-input {
+            width: 100%;
+            padding: 16px 56px 16px 22px;
+            font-size: 18px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            color: #fff;
+            outline: none;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
         }
-        .clean-text .line.s3 {
-            width: 92%;
+        .search-input::placeholder {
+            color: #555;
         }
-        .clean-text .line.s4 {
-            width: 75%;
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(96, 165, 250, 0.12);
         }
-
-        .arrow {
+        .search-clear {
             position: absolute;
+            right: 14px;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 32px;
-            z-index: 2;
-            background: #0a0a0f;
-            width: 50px;
-            height: 50px;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            display: flex;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+            display: none;
             align-items: center;
             justify-content: center;
-            border: 2px solid #333;
-            color: #64c8ff;
+            transition: var(--transition);
         }
-
-        /* Форма */
-        .cta-section {
-            text-align: center;
-        }
-
-        .cta-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .cta-subtitle {
-            color: #888;
-            margin-bottom: 24px;
-            font-size: 14px;
-        }
-
-        .form-row {
+        .search-clear.visible {
             display: flex;
-            gap: 10px;
-            max-width: 450px;
-            margin: 0 auto;
         }
-
-        .email-input {
-            flex: 1;
-            padding: 14px 18px;
-            border-radius: 12px;
-            border: 1px solid #333;
-            background: #13131a;
+        .search-clear:hover {
             color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
+            background: #ffffff10;
         }
-
-        .email-input:focus {
-            border-color: #64c8ff;
+        .search-hint {
+            text-align: center;
+            font-size: 12px;
+            color: #444;
+            margin-top: 8px;
         }
-
-        .cta-btn {
-            padding: 14px 28px;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(135deg, #64c8ff, #a78bfa);
-            color: #0a0a0f;
-            font-weight: 700;
-            font-size: 16px;
+        .search-hint span {
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: var(--transition);
+            margin: 0 4px;
+        }
+        .search-hint span:hover {
+            color: var(--accent);
+        }
+
+        /* ========== СТАТУС-БАР ========== */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .status-bar.visible {
+            opacity: 1;
+        }
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: statusBlink 1.5s ease-in-out infinite;
+        }
+        .status-dot.searching {
+            background: #fbbf24;
+            animation: statusBlink 0.5s ease-in-out infinite;
+        }
+        @keyframes statusBlink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* ========== РЕЗУЛЬТАТЫ ========== */
+        .results-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .result-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .result-card:hover {
+            border-color: #ffffff20;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+        .result-card:active {
+            transform: scale(0.985);
+        }
+        .result-url {
+            font-size: 11px;
+            color: var(--accent);
+            margin-bottom: 4px;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-        .cta-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 8px 30px rgba(100, 200, 255, 0.3);
+        .result-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 5px;
+            line-height: 1.3;
         }
-
-        .cta-btn:active {
-            transform: scale(0.97);
+        .result-snippet {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-
-        .success-message {
-            display: none;
-            margin-top: 16px;
-            color: #28ca41;
+        .result-badge {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            font-size: 10px;
+            background: #22c55e18;
+            color: var(--success);
+            padding: 3px 9px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
             font-weight: 600;
         }
-
-        .success-message.visible {
-            display: block;
-            animation: fadeIn 0.4s ease;
+        .result-card.no-clean .result-badge {
+            background: #f59e0b18;
+            color: #fbbf24;
         }
 
-        @keyframes fadeIn {
+        /* ========== ОЧИЩЕННАЯ СТРАНИЦА (READER) ========== */
+        .reader-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .reader-overlay.open {
+            display: flex;
+        }
+        .reader-window {
+            background: #f8f9fa;
+            color: #1a1a2e;
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            margin: 30px 0;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            animation: readerSlideIn 0.35s ease;
+        }
+        @keyframes readerSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(30px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
-
-        .counter {
-            margin-top: 20px;
-            font-size: 13px;
-            color: #555;
+        .reader-header {
+            background: #fff;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 5;
         }
-
-        .counter span {
-            color: #64c8ff;
+        .reader-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .reader-logo {
+            font-weight: 900;
+            font-size: 16px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .reader-badge {
+            font-size: 10px;
+            background: #22c55e18;
+            color: #16a34a;
+            padding: 3px 8px;
+            border-radius: 8px;
             font-weight: 700;
         }
-
-        /* Футер */
-        .footer {
+        .reader-close {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: #f1f5f9;
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .reader-close:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .reader-content {
+            padding: 28px 26px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        .reader-content h1 {
+            font-size: 26px;
+            margin-bottom: 16px;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        .reader-content p {
+            margin-bottom: 14px;
+            color: #334155;
+        }
+        .reader-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+        .reader-loading {
             text-align: center;
-            margin-top: 60px;
-            font-size: 12px;
-            color: #444;
+            padding: 50px;
+            color: #64748b;
+        }
+        .reader-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #e2e8f0;
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 14px;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        /* Адаптив */
+        /* ========== ПУСТОЙ РЕЗУЛЬТАТ ========== */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-icon {
+            font-size: 56px;
+            margin-bottom: 14px;
+            opacity: 0.6;
+        }
+        .empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #ccc;
+        }
+        .empty-sub {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* ========== ФУТЕР ========== */
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #333;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ========== АДАПТИВ ========== */
         @media (max-width: 600px) {
             .logo {
-                font-size: 48px;
+                font-size: 38px;
             }
-            .tagline {
-                font-size: 18px;
+            .search-input {
+                font-size: 16px;
+                padding: 14px 48px 14px 16px;
             }
-            .demo-body {
-                flex-direction: column;
+            .result-title {
+                font-size: 15px;
             }
-            .arrow {
-                transform: translate(-50%, -50%) rotate(90deg);
+            .reader-content {
+                padding: 20px 16px;
+                font-size: 15px;
             }
-            .form-row {
-                flex-direction: column;
-            }
-            .cta-btn {
-                width: 100%;
+            .reader-content h1 {
+                font-size: 21px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Анимированный фон -->
-    <div class="bg-grid"></div>
+    <!-- Фоновые эффекты -->
+    <div class="bg-glow g1"></div>
+    <div class="bg-glow g2"></div>
     <div class="particles" id="particles"></div>
 
-    <!-- Контент -->
+    <!-- Основной контейнер -->
     <div class="container">
-        <!-- Хиро -->
-        <div class="hero">
-            <h1 class="logo">GetCool</h1>
-            <p class="tagline">Интернет без рекламы. Только суть.</p>
-            <p class="subtitle">Открывайте любую статью чистой, быстрой и красивой</p>
+        <!-- Логотип -->
+        <div class="logo-wrap">
+            <h1 class="logo">get-cool</h1>
+            <p class="logo-sub">Поиск без рекламы. Только суть.</p>
+            <span class="domain-badge">get-cool.ru</span>
         </div>
 
-        <!-- Демо-окно -->
-        <div class="demo-window">
-            <div class="demo-header">
-                <span class="dot red"></span>
-                <span class="dot yellow"></span>
-                <span class="dot green"></span>
-                <span class="demo-url">getcool.ru/article</span>
+        <!-- Поиск -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <input
+                type="text"
+                class="search-input"
+                id="searchInput"
+                placeholder="Введите поисковый запрос..."
+                autocomplete="off"
+                >
+                <button class="search-clear" id="searchClear" title="Очистить">×</button>
             </div>
-            <div class="demo-body">
-                <!-- Оригинал -->
-                <div class="demo-original">
-                    <div class="label">Обычный сайт</div>
-                    <div class="ad-block">▸ Баннер рекламы</div>
-                    <div class="text-line"></div>
-                    <div class="text-line short"></div>
-                    <div class="ad-block">▸ Всплывающее окно</div>
-                    <div class="text-line medium"></div>
-                    <div class="ad-block">▸ Видеореклама</div>
-                    <div class="text-line"></div>
-                    <div class="text-line short"></div>
-                    <div class="ad-block">▸ Примите куки</div>
+            <div class="search-hint">
+                Например:
+                <span data-query="как приготовить кофе">кофе</span>
+                <span data-query="новости науки">наука</span>
+                <span data-query="рецепт блинов">блины</span>
+            </div>
+        </div>
+
+        <!-- Статус -->
+        <div class="status-bar" id="statusBar">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Введите запрос</span>
+        </div>
+
+        <!-- Результаты -->
+        <div class="results-container" id="resultsContainer"></div>
+    </div>
+
+    <!-- Очищенная страница (ридер) -->
+    <div class="reader-overlay" id="readerOverlay">
+        <div class="reader-window">
+            <div class="reader-header">
+                <div class="reader-header-left">
+                    <span class="reader-logo">get-cool</span>
+                    <span class="reader-badge">Без рекламы</span>
                 </div>
-
-                <!-- Стрелка -->
-                <div class="arrow">→</div>
-
-                <!-- Очищенная версия -->
-                <div class="demo-clean">
-                    <div class="label">GetCool</div>
-                    <div class="clean-title">Заголовок статьи</div>
-                    <div class="clean-text">
-                        <span class="line s1"></span>
-                        <span class="line s2"></span>
-                        <span class="line s3"></span>
-                        <span class="line s1"></span>
-                        <span class="line s4"></span>
-                        <span class="line s2"></span>
-                    </div>
+                <button class="reader-close" id="readerClose">✕</button>
+            </div>
+            <div class="reader-content" id="readerContent">
+                <div class="reader-loading">
+                    <div class="reader-spinner"></div>
+                    Загружаем чистую версию...
                 </div>
             </div>
-        </div>
-
-        <!-- CTA -->
-        <div class="cta-section">
-            <h2 class="cta-title">Узнайте первым о запуске</h2>
-            <p class="cta-subtitle">Никакого спама. Только новость, когда мы запустимся.</p>
-            <div class="form-row">
-                <input type="email" class="email-input" placeholder="your@email.ru" id="emailInput">
-                <button class="cta-btn" id="ctaBtn">Сообщить</button>
-            </div>
-            <div class="success-message" id="successMsg">✓ Отлично! Мы напишем вам на почту.</div>
-            <div class="counter">Уже <span id="counter">847</span> человек ждут запуска</div>
-        </div>
-
-        <!-- Футер -->
-        <div class="footer">
-            GetCool © 2026 &nbsp;·&nbsp; Чистый интернет &nbsp;·&nbsp; Без рекламы
         </div>
     </div>
 
+    <!-- Футер -->
+    <div class="footer">
+        get-cool.ru &nbsp;·&nbsp; Поиск без рекламы и трекеров &nbsp;·&nbsp; 2026
+    </div>
+
     <script>
-        // Частицы
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 40; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 8 + 's';
-            particle.style.animationDuration = (6 + Math.random() * 8) + 's';
-            particlesContainer.appendChild(particle);
-        }
+        (function() {
+            // ========== DOM ==========
+            const searchInput = document.getElementById('searchInput');
+            const searchClear = document.getElementById('searchClear');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const statusBar = document.getElementById('statusBar');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const readerOverlay = document.getElementById('readerOverlay');
+            const readerContent = document.getElementById('readerContent');
+            const readerClose = document.getElementById('readerClose');
+            const hintSpans = document.querySelectorAll('.search-hint span[data-query]');
 
-        // Счётчик (имитация)
-        const counterEl = document.getElementById('counter');
-        let count = 847;
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                count++;
-                counterEl.textContent = count;
+            let searchTimer = null;
+            let currentResults = [];
+
+            // ========== ФОН: ЧАСТИЦЫ ==========
+            const particlesEl = document.getElementById('particles');
+            for (let i = 0; i < 35; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 10 + 's';
+                p.style.animationDuration = (7 + Math.random() * 10) + 's';
+                particlesEl.appendChild(p);
             }
-        }, 3000);
 
-        // Форма
-        const btn = document.getElementById('ctaBtn');
-        const input = document.getElementById('emailInput');
-        const success = document.getElementById('successMsg');
+            // ========== СТАТУС-БАР ==========
+            function setStatus(text, searching = false) {
+                statusText.textContent = text;
+                statusBar.classList.add('visible');
+                statusDot.classList.toggle('searching', searching);
+            }
 
-        btn.addEventListener('click', () => {
-            const email = input.value.trim();
-            if (email && email.includes('@') && email.includes('.')) {
-                // Сохраняем в localStorage (без сервера)
-                const emails = JSON.parse(localStorage.getItem('getcool_emails') || '[]');
-                if (!emails.includes(email)) {
-                    emails.push(email);
-                    localStorage.setItem('getcool_emails', JSON.stringify(emails));
+            // ========== ОЧИСТКА ПОЛЯ ==========
+            function toggleClear() {
+                if (searchInput.value.length > 0) {
+                    searchClear.classList.add('visible');
+                } else {
+                    searchClear.classList.remove('visible');
                 }
-                success.classList.add('visible');
-                input.value = '';
-                btn.textContent = '✓';
-                setTimeout(() => {
-                    success.classList.remove('visible');
-                    btn.textContent = 'Сообщить';
-                }, 3000);
-            } else {
-                input.style.borderColor = '#ff5f57';
-                input.placeholder = 'Введите корректный email';
-                setTimeout(() => {
-                    input.style.borderColor = '#333';
-                    input.placeholder = 'your@email.ru';
-                }, 1500);
             }
-        });
+            searchInput.addEventListener('input', toggleClear);
+            searchClear.addEventListener('click', () => {
+                searchInput.value = '';
+                toggleClear();
+                searchInput.focus();
+                resultsContainer.innerHTML = '';
+                currentResults = [];
+                setStatus('Введите запрос');
+            });
 
-        // Enter в инпуте
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') btn.click();
-        });
+            // ========== ПОДСКАЗКИ-КЛИК ==========
+            hintSpans.forEach(span => {
+                span.addEventListener('click', () => {
+                    const q = span.getAttribute('data-query');
+                    searchInput.value = q;
+                    toggleClear();
+                    doSearch(q);
+                });
+            });
 
-        console.log('%c🆒 GetCool %c— Чистый интернет без рекламы',
-            'font-size:20px;font-weight:bold;color:#64c8ff;',
-            'color:#aaa;');
-        console.log('%cСохранённые email\'ы: %c' +
-            JSON.parse(localStorage.getItem('getcool_emails') || '[]').length + ' шт.',
-            'color:#aaa;', 'color:#28ca41;');
-    </script>
-</body>
-</html>
+            // ========== ПОИСК ==========
+            searchInput.addEventListener('keydown', (e) => {
+     
