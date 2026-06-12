@@ -11,8 +11,8 @@ body{font-family:system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;min-heigh
 .home{text-align:center;padding-top:12vh}
 .logo{font-size:clamp(36px,8vw,52px);font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .logo-sub{color:#888;margin:8px 0 20px;font-size:14px}
-.sbox{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:6px 10px;max-width:600px;margin:0 auto;transition:.3s}
-.sbox:focus-within{border-color:#60a5fa;box-shadow:0 0 30px rgba(96,165,250,.1)}
+.sbox{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:6px 10px;max-width:600px;margin:0 auto}
+.sbox:focus-within{border-color:#60a5fa}
 .sicon{width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .sicon svg{width:20px;height:20px;fill:#888}.sbox:focus-within .sicon svg{fill:#60a5fa}
 .sinp{flex:1;padding:10px;font-size:16px;background:transparent;border:none;color:#fff;outline:none}
@@ -73,6 +73,7 @@ body{font-family:system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;min-heigh
 .aisend{width:34px;height:34px;border-radius:50%;border:none;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#fff;cursor:pointer;font-size:14px;transition:.2s}
 .aisend:hover{opacity:.9}.aisend:disabled{opacity:.4}
 .foot{text-align:center;font-size:9px;color:#333;padding:10px;margin-top:auto}
+@media(max-width:600px){.aiwin{height:85vh;border-radius:12px}}
 </style>
 </head>
 <body>
@@ -117,7 +118,8 @@ body{font-family:system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;min-heigh
         <div class="aichat" id="aichat"><div class="aimsg b">Привет! Я Cool AI. Могу искать информацию, погоду, новости и просто общаться. Спроси что угодно!</div></div>
         <div class="airow"><input class="aiinp" id="aiinp" placeholder="Спросите..." autocomplete="off"><button class="aisend" id="aisend">➤</button></div>
     </div>
-    </div><script>
+        </div>
+        <script>
 const $=id=>document.getElementById(id);
 const home=$('home'),resPage=$('resPage'),siMain=$('siMain'),siSm=$('siSm'),showAds=$('showAds'),list=$('list'),stats=$('stats');
 const bover=$('bover'),bframe=$('bframe'),burl=$('burl'),aiover=$('aiover'),aichat=$('aichat'),aiinp=$('aiinp'),aisend=$('aisend');
@@ -150,13 +152,12 @@ function showType(){const d=document.createElement('div');d.className='aitype';d
 function hideType(){const t=$('aitype');if(t)t.remove()}
 
 function makeLinksClickable(text){
-    return text.replace(/(https?:\/\/[^\s]+)/g,'<a onclick="event.stopPropagation();openBrowser(\'$1\')">$1</a>');
+    return text.replace(/(https?:\/\/[^\s]+)/g,'<a onclick="event.stopPropagation();document.getElementById(\'bover\').classList.add(\'on\');document.getElementById(\'bframe\').src=\'$1\';document.getElementById(\'burl\').textContent=\'$1\'">$1</a>');
 }
 
 async function sendAI(){
     const t=aiinp.value.trim();if(!t)return;aiinp.value='';addMsg(esc(t),'u');showType();aisend.disabled=true;
     try{
-        // Погода
         const wm=t.match(/погода\s+в?\s*(.+)/i)||(t.toLowerCase().includes('погода')?['',t.replace(/погода\s*/i,'').trim()||'Москва']:null);
         if(wm){
             const r=await fetch(`https://wttr.in/${encodeURIComponent(wm[1])}?format=j1&lang=ru`);
@@ -164,8 +165,7 @@ async function sendAI(){
             hideType();addMsg(`🌤 <b>${wm[1]}</b>: ${c.temp_C}°C, ${c.weatherDesc[0].value}, ветер ${c.windspeedKmph} км/ч, влажность ${c.humidity}%`,'b');
             aisend.disabled=false;return;
         }
-        // Общение + поиск
-        const greetings={привет:'Привет! Как дела? Чем могу помочь?',как дела:'Отлично! А у вас?',как тебя зовут:'Я Cool AI — помощник get-cool.ru.',кто ты:'Я Cool AI — нейросеть-поисковик. Ищу информацию, погоду, новости.',что ты умеешь:'Могу искать в интернете, показывать погоду, отвечать на вопросы и просто общаться.'};
+        const greetings={привет:'Привет! Как дела?',как дела:'Отлично! А у вас?',как тебя зовут:'Я Cool AI — помощник get-cool.ru.',кто ты:'Я Cool AI. Ищу информацию, погоду, новости.',что ты умеешь:'Могу искать в интернете, показывать погоду, отвечать на вопросы и просто общаться.'};
         const q=t.toLowerCase().replace(/[?.,!]/g,'');
         if(greetings[q]){hideType();addMsg(greetings[q],'b');aisend.disabled=false;return}
 
@@ -176,7 +176,7 @@ async function sendAI(){
             let a='Вот что нашлось:\n';
             d.RelatedTopics.slice(0,5).forEach((t,i)=>{const url=t.FirstURL||'';a+=`\n${i+1}. ${t.Text.split(' - ')[0].substring(0,80)}${url?'\n🔗 '+url:''}`});
             addMsg(makeLinksClickable(a),'b');
-        }else addMsg('Пока не знаю ответа. Попробуйте спросить иначе.','b');
+        }else addMsg('Пока не знаю. Спросите иначе.','b');
     }catch(e){hideType();addMsg('Ошибка соединения.','b')}
     aisend.disabled=false;
 }
