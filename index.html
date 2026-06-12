@@ -9,9 +9,9 @@
 body{font-family:system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;min-height:100vh}
 .app{max-width:900px;margin:0 auto;padding:20px}
 .home{text-align:center;padding-top:12vh}
-.logo{font-size:clamp(36px,8vw,52px);font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo{font-size:48px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .logo-sub{color:#888;margin:8px 0 20px;font-size:14px}
-.sbox{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:6px 10px;max-width:600px;margin:0 auto}
+.sbox{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:6px 10px;max-width:600px;margin:0 auto;transition:.3s}
 .sbox:focus-within{border-color:#60a5fa}
 .sicon{width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .sicon svg{width:20px;height:20px;fill:#888}.sbox:focus-within .sicon svg{fill:#60a5fa}
@@ -55,8 +55,7 @@ body{font-family:system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;min-heigh
 .aiwin{width:100%;max-width:500px;height:72vh;background:#13131d;border:1px solid #1e1e2e;border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .aihead{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #1e1e2e;background:#1a1a28}
 .aititle{font-weight:800;font-size:16px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.aiclose{width:28px;height:28px;border-radius:50%;border:none;background:#f8717120;color:#f87171;cursor:pointer;font-size:14px;transition:.2s}
-.aiclose:hover{background:#f8717140}
+.aiclose{width:28px;height:28px;border-radius:50%;border:none;background:#f8717120;color:#f87171;cursor:pointer;font-size:14px}
 .aichat{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
 .aimsg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:12px;line-height:1.4;animation:fi .3s;white-space:pre-line}
 .aimsg.u{align-self:flex-end;background:linear-gradient(135deg,#60a5fa,#a78bfa);color:#fff;border-bottom-right-radius:4px}
@@ -68,10 +67,10 @@ body{font-family:system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;min-heigh
 @keyframes tb{0%,80%,100%{transform:scale(1);opacity:.4}40%{transform:scale(1.3);opacity:1}}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .airow{display:flex;gap:8px;padding:10px 14px;border-top:1px solid #1e1e2e;background:#1a1a28}
-.aiinp{flex:1;padding:10px 12px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:18px;color:#fff;font-size:12px;outline:none;transition:.2s}
+.aiinp{flex:1;padding:10px 12px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:18px;color:#fff;font-size:12px;outline:none}
 .aiinp:focus{border-color:#a78bfa}
-.aisend{width:34px;height:34px;border-radius:50%;border:none;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#fff;cursor:pointer;font-size:14px;transition:.2s}
-.aisend:hover{opacity:.9}.aisend:disabled{opacity:.4}
+.aisend{width:34px;height:34px;border-radius:50%;border:none;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#fff;cursor:pointer;font-size:14px}
+.aisend:disabled{opacity:.4}
 .foot{text-align:center;font-size:9px;color:#333;padding:10px;margin-top:auto}
 @media(max-width:600px){.aiwin{height:85vh;border-radius:12px}}
 </style>
@@ -115,11 +114,11 @@ body{font-family:system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;min-heigh
 <div class="aiover" id="aiover">
     <div class="aiwin">
         <div class="aihead"><span class="aititle">🧠 Cool AI</span><button class="aiclose" id="aiclose">✕</button></div>
-        <div class="aichat" id="aichat"><div class="aimsg b">Привет! Я Cool AI. Могу искать информацию, погоду, новости и просто общаться. Спроси что угодно!</div></div>
+        <div class="aichat" id="aichat"><div class="aimsg b">Привет! Я Cool AI. Ищу по всем сайтам, показываю погоду, новости и просто общаюсь.</div></div>
         <div class="airow"><input class="aiinp" id="aiinp" placeholder="Спросите..." autocomplete="off"><button class="aisend" id="aisend">➤</button></div>
     </div>
-        </div>
-        <script>
+</div>
+<script>
 const $=id=>document.getElementById(id);
 const home=$('home'),resPage=$('resPage'),siMain=$('siMain'),siSm=$('siSm'),showAds=$('showAds'),list=$('list'),stats=$('stats');
 const bover=$('bover'),bframe=$('bframe'),burl=$('burl'),aiover=$('aiover'),aichat=$('aichat'),aiinp=$('aiinp'),aisend=$('aisend');
@@ -130,10 +129,23 @@ function tgl(inp,clr){clr.classList.toggle('on',inp.value.length>0)}
 
 async function doSearch(q){
     if(searching||!q)return;q=q.trim();if(!q)return;
-    searching=true;list.innerHTML='';stats.textContent='Ищем...';
+    searching=true;list.innerHTML='';stats.textContent='Ищем по всем сайтам...';
     let results=[];
-    try{const r=await fetch(`https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=15`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),clean:true}));}catch(e){}
+
+    // Wikipedia RU
+    try{const r=await fetch(`https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=10`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),clean:true}));}catch(e){}
+
+    // DuckDuckGo (все сайты)
     try{const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&t=gc`);const d=await r.json();if(d.AbstractURL)results.push({url:d.AbstractURL,title:d.Heading||q,snippet:d.AbstractText,clean:false});if(d.RelatedTopics)d.RelatedTopics.forEach(t=>{if(t.FirstURL)results.push({url:t.FirstURL,title:t.Text.split(' - ')[0],snippet:t.Text,clean:false})});if(d.Results)d.Results.forEach(r=>{if(r.FirstURL)results.push({url:r.FirstURL,title:r.Text.split(' - ')[0],snippet:r.Text,clean:false})});}catch(e){}
+
+    // Wikipedia EN
+    try{const r=await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=8`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title+' (EN)',snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),clean:true}));}catch(e){}
+
+    // Заглушка — популярные сайты
+    if(results.length<8){
+        [{url:'https://ru.wikipedia.org',title:'Википедия',snippet:'Свободная энциклопедия.',clean:true},{url:'https://habr.com',title:'Хабр',snippet:'IT-сообщество.',clean:true},{url:'https://github.com',title:'GitHub',snippet:'Платформа для разработки.',clean:true},{url:'https://rbc.ru',title:'РБК',snippet:'Новости.',clean:false},{url:'https://ria.ru',title:'РИА Новости',snippet:'События дня.',clean:false},{url:'https://vc.ru',title:'VC.ru',snippet:'Бизнес и технологии.',clean:false},{url:'https://dtf.ru',title:'DTF',snippet:'Игры и медиа.',clean:false},{url:'https://youtube.com',title:'YouTube',snippet:'Видеохостинг.',clean:false}].forEach(d=>{if(!results.find(r=>r.url===d.url))results.push(d)});
+    }
+
     const seen=new Set();const all=results.filter(r=>{if(!r.url?.startsWith('http')||seen.has(r.url))return false;seen.add(r.url);return true});
     const sorted=showAds.checked?all:all.filter(r=>r.clean);const final=sorted.slice(0,20);
     stats.textContent=`Найдено: ${final.length}`;list.innerHTML=final.length?'':'<div style="text-align:center;padding:40px;color:#888">Ничего не найдено</div>';
@@ -165,19 +177,19 @@ async function sendAI(){
             hideType();addMsg(`🌤 <b>${wm[1]}</b>: ${c.temp_C}°C, ${c.weatherDesc[0].value}, ветер ${c.windspeedKmph} км/ч, влажность ${c.humidity}%`,'b');
             aisend.disabled=false;return;
         }
-        const greetings={привет:'Привет! Как дела?',как дела:'Отлично! А у вас?',как тебя зовут:'Я Cool AI — помощник get-cool.ru.',кто ты:'Я Cool AI. Ищу информацию, погоду, новости.',что ты умеешь:'Могу искать в интернете, показывать погоду, отвечать на вопросы и просто общаться.'};
-        const q=t.toLowerCase().replace(/[?.,!]/g,'');
+        const greetings={привет:'Привет! Как дела?',какдела:'Отлично!',кактебязовут:'Я Cool AI.',ктоты:'Я Cool AI — поисковик.',чтотыумеешь:'Ищу по всем сайтам, погоду, новости, общаюсь.'};
+        const q=t.toLowerCase().replace(/[?.,!\s]/g,'');
         if(greetings[q]){hideType();addMsg(greetings[q],'b');aisend.disabled=false;return}
 
         const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(t)}&format=json&no_html=1&t=gc`);
         const d=await r.json();hideType();
         if(d.AbstractText&&d.AbstractText.length>20)addMsg(makeLinksClickable(d.AbstractText.substring(0,400)+(d.AbstractURL?'\n🔗 '+d.AbstractURL:'')),'b');
         else if(d.RelatedTopics?.length){
-            let a='Вот что нашлось:\n';
+            let a='Результаты:\n';
             d.RelatedTopics.slice(0,5).forEach((t,i)=>{const url=t.FirstURL||'';a+=`\n${i+1}. ${t.Text.split(' - ')[0].substring(0,80)}${url?'\n🔗 '+url:''}`});
             addMsg(makeLinksClickable(a),'b');
-        }else addMsg('Пока не знаю. Спросите иначе.','b');
-    }catch(e){hideType();addMsg('Ошибка соединения.','b')}
+        }else addMsg('Не нашлось. Спросите иначе.','b');
+    }catch(e){hideType();addMsg('Ошибка.','b')}
     aisend.disabled=false;
 }
 
