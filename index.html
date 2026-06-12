@@ -7,10 +7,9 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:system-ui,sans-serif;background:#0a0a10;color:#d4d4d8;min-height:100vh}
-        .app{max-width:900px;margin:0 auto;padding:0 20px;min-height:100vh;display:flex;flex-direction:column}
+        .app{max-width:900px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;min-height:100vh}
         .home{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:15vh}
         .logo{font-size:56px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-        .logo-sub{font-size:15px;color:#888;margin-bottom:24px}
         .sbox{display:flex;align-items:center;background:#13131d;border:2px solid #1e1e2e;border-radius:28px;padding:6px 10px;width:100%;max-width:600px;transition:.3s}
         .sbox:focus-within{border-color:#60a5fa;box-shadow:0 0 35px rgba(96,165,250,.15)}
         .sicon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%}
@@ -19,88 +18,90 @@
         .sinp::placeholder{color:#555}
         .sclr{width:34px;height:34px;border-radius:50%;border:none;background:transparent;color:#666;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center}
         .sclr.on{display:flex}
-        .btns{display:flex;gap:12px;margin-top:20px}
-        .btn1{padding:10px 24px;background:#13131d;border:1px solid #1e1e2e;border-radius:22px;color:#ccc;font-size:14px;cursor:pointer;transition:.2s}
-        .btn1:hover{background:#1a1a28}
-        .btn2{padding:10px 24px;background:linear-gradient(135deg,#a78bfa,#60a5fa);border:none;border-radius:22px;color:#fff;font-size:14px;cursor:pointer;font-weight:600;transition:.2s}
-        .btn2:hover{opacity:.9}
-        .hint{font-size:12px;color:#555;margin-top:16px}
-        .hint span{color:#888;cursor:pointer;margin:0 3px}.hint span:hover{color:#60a5fa}
+        .btns{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+        .btn1,.btn2{padding:10px 24px;border-radius:22px;font-size:14px;cursor:pointer;transition:.2s}
+        .btn1{background:#13131d;border:1px solid #1e1e2e;color:#ccc}.btn1:hover{background:#1a1a28}
+        .btn2{background:linear-gradient(135deg,#a78bfa,#60a5fa);border:none;color:#fff;font-weight:600}.btn2:hover{opacity:.9}
+        .hint{font-size:12px;color:#555;margin-top:16px}.hint span{color:#888;cursor:pointer;margin:0 3px}.hint span:hover{color:#60a5fa}
 
-        .res-page{display:none;flex:1;flex-direction:column;padding-top:18px}
-        .res-page.on{display:flex}
-        .top-bar{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid #1e1e2e;margin-bottom:14px;flex-wrap:wrap}
+        .res-page{display:none;flex:1;flex-direction:column;padding-top:18px}.res-page.on{display:flex}
+        .top-bar{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #1e1e2e;margin-bottom:14px;flex-wrap:wrap}
         .logo-sm{font-size:24px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
-        .sbox-sm{display:flex;align-items:center;background:#13131d;border:1px solid #1e1e2e;border-radius:24px;padding:3px 8px;flex:1;min-width:200px;transition:.3s}
-        .sbox-sm:focus-within{border-color:#60a5fa}
+        .sbox-sm{display:flex;align-items:center;background:#13131d;border:1px solid #1e1e2e;border-radius:24px;padding:3px 8px;flex:1;min-width:180px}
         .sicon-sm{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer}
         .sicon-sm svg{width:18px;height:18px;fill:#888}
         .sinp-sm{flex:1;padding:8px 4px;font-size:14px;background:transparent;border:none;color:#fff;outline:none}
         .sclr-sm{width:28px;height:28px;border-radius:50%;border:none;background:transparent;color:#666;font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center}
         .sclr-sm.on{display:flex}
-        .ai-btn{padding:8px 16px;background:linear-gradient(135deg,#a78bfa,#60a5fa);border:none;border-radius:20px;color:#fff;font-size:12px;cursor:pointer;font-weight:600}
+        .ai-btn,.acc-btn{padding:8px 14px;border:none;border-radius:20px;color:#fff;font-size:11px;cursor:pointer;font-weight:600;white-space:nowrap}
+        .ai-btn{background:linear-gradient(135deg,#a78bfa,#60a5fa)}.acc-btn{background:#1e1e2e;border:1px solid #333}
         .filters{display:flex;gap:6px;margin-bottom:10px;align-items:center;font-size:11px;color:#888}
-        .filters label{display:flex;align-items:center;gap:5px;cursor:pointer}
-        .filters input{display:none}
+        .filters label{display:flex;align-items:center;gap:5px;cursor:pointer}.filters input{display:none}
         .cb{width:15px;height:15px;border:2px solid #444;border-radius:3px;display:flex;align-items:center;justify-content:center}
         .cb svg{width:9px;height:9px;fill:#4ade80;display:none}
         .filters input:checked+.cb{border-color:#4ade80;background:#4ade80}
         .filters input:checked+.cb svg{display:block;fill:#fff}
         .stats{font-size:11px;color:#666;margin-bottom:10px}
-        .list{display:flex;flex-direction:column;gap:16px;padding-bottom:30px}
-        .card{cursor:pointer;padding:8px 0;border-radius:8px;transition:.2s}
+        .list{display:flex;flex-direction:column;padding-bottom:30px}
+        .card{cursor:pointer;padding:12px 0;border-bottom:1px solid #1e1e2e;transition:.2s}
         .card:hover .ct{text-decoration:underline}
         .cu{font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px;display:flex;align-items:center;gap:6px}
         .bd{font-size:8px;padding:2px 7px;border-radius:6px;font-weight:700}
         .bd.g{background:#22c55e18;color:#4ade80}.bd.y{background:#f59e0b18;color:#fbbf24}
-        .ct{font-size:18px;color:#60a5fa;margin-bottom:4px;line-height:1.3}
+        .ct{font-size:18px;color:#60a5fa;margin-bottom:4px}
         .cs{font-size:13px;color:#888;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-        .bover{position:fixed;inset:0;background:#000e;z-index:100;display:none;flex-direction:column}
-        .bover.on{display:flex}
+        .bover,.aiover,.accover{position:fixed;inset:0;background:#000e;z-index:100;display:none;align-items:center;justify-content:center}
+        .bover.on{display:flex;flex-direction:column;align-items:stretch}
+        .aiover.on,.accover.on{display:flex}
         .btop{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#13131d;border-bottom:1px solid #1e1e2e}
         .burl{flex:1;padding:8px 14px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:20px;font-size:12px;color:#aaa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .bbtn{width:34px;height:34px;border-radius:50%;border:none;background:#1e1e2e;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
         .bbtn:hover{background:#333}.bbtn.x{background:#f8717120;color:#f87171}
         .bframe{flex:1;width:100%;border:none;background:#fff}
 
-        .aiover{position:fixed;inset:0;background:#000e;z-index:200;display:none;align-items:center;justify-content:center}
-        .aiover.on{display:flex}
-        .aiwin{width:100%;max-width:650px;height:85vh;background:#13131d;border:1px solid #1e1e2e;border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
-        .aihead{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #1e1e2e}
-        .aititle{font-weight:800;font-size:20px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .aiclose{width:36px;height:36px;border-radius:50%;border:none;background:#f8717120;color:#f87171;cursor:pointer;font-size:18px}
-        .aichat{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
-        .aimsg{max-width:85%;padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.5;animation:fi .3s}
+        .aiwin,.accwin{width:100%;max-width:600px;height:80vh;background:#13131d;border:1px solid #1e1e2e;border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
+        .aihead,.acchead{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #1e1e2e}
+        .aititle,.acctitle{font-weight:800;font-size:18px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .aiclose,.accclose{width:32px;height:32px;border-radius:50%;border:none;background:#f8717120;color:#f87171;cursor:pointer;font-size:16px}
+        .aichat{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+        .aimsg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;animation:fi .3s;white-space:pre-line}
         .aimsg.u{align-self:flex-end;background:linear-gradient(135deg,#60a5fa,#a78bfa);color:#fff}
         .aimsg.b{align-self:flex-start;background:#1e1e2e}
-        .aitype{align-self:flex-start;padding:12px 16px;background:#1e1e2e;border-radius:16px;display:flex;gap:4px}
+        .aitype{align-self:flex-start;padding:10px 14px;background:#1e1e2e;border-radius:14px;display:flex;gap:4px}
         .aitype span{width:6px;height:6px;background:#888;border-radius:50%;animation:tb 1.4s infinite}
         .aitype span:nth-child(2){animation-delay:.2s}.aitype span:nth-child(3){animation-delay:.4s}
         @keyframes tb{0%,80%,100%{transform:scale(1);opacity:.4}40%{transform:scale(1.3);opacity:1}}
         @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        .airow{display:flex;gap:10px;padding:14px 20px;border-top:1px solid #1e1e2e}
-        .aiinp{flex:1;padding:12px 16px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:24px;color:#fff;font-size:14px;outline:none}
-        .aiinp:focus{border-color:#a78bfa}
-        .aisend{width:42px;height:42px;border-radius:50%;border:none;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#fff;cursor:pointer;font-size:18px}
+        .airow{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #1e1e2e}
+        .aiinp{flex:1;padding:10px 14px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:20px;color:#fff;font-size:13px;outline:none}
+        .aisend{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#fff;cursor:pointer;font-size:16px}
         .aisend:disabled{opacity:.4}
-        .foot{text-align:center;font-size:10px;color:#333;padding:12px;margin-top:auto}
-        @media(max-width:600px){.logo{font-size:40px}.top-bar{gap:8px}.logo-sm{font-size:20px}.aiwin{height:92vh;border-radius:12px}}
+        .accform{display:flex;flex-direction:column;gap:10px;padding:16px}
+        .accinp{padding:10px 14px;background:#0a0a10;border:1px solid #1e1e2e;border-radius:10px;color:#fff;font-size:13px;outline:none}
+        .accinp:focus{border-color:#60a5fa}
+        .accbtn{padding:10px;background:linear-gradient(135deg,#60a5fa,#a78bfa);border:none;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;font-size:13px}
+        .hist-list{flex:1;overflow-y:auto;padding:14px}
+        .hist-item{padding:8px 12px;border-bottom:1px solid #1e1e2e;cursor:pointer;font-size:12px;transition:.2s}
+        .hist-item:hover{background:#ffffff05;color:#60a5fa}
+        .foot{text-align:center;font-size:10px;color:#333;padding:10px;margin-top:auto}
+        @media(max-width:600px){.logo{font-size:38px}.aiwin,.accwin{height:90vh;border-radius:12px}}
     </style>
 </head>
 <body>
     <div class="app">
         <div class="home" id="home">
             <h1 class="logo">get-cool</h1>
-            <p class="logo-sub">Поиск без рекламы. Только суть.</p>
+            <p style="color:#888;margin-bottom:20px">Поиск без рекламы. Только суть.</p>
             <div class="sbox" id="sboxMain">
                 <div class="sicon" id="siconMain"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
                 <input class="sinp" id="siMain" placeholder="Введите запрос..." autocomplete="off">
                 <button class="sclr" id="sclrMain">×</button>
             </div>
             <div class="btns">
-                <button class="btn1" id="searchBtn">Поиск</button>
+                <button class="btn1" id="searchBtn">🔍 Поиск</button>
                 <button class="btn2" id="aiBtnHome">🧠 Cool AI</button>
+                <button class="btn1" id="accBtnHome">👤 Аккаунт</button>
             </div>
             <div class="hint"><span data-q="кофе">кофе</span> · <span data-q="новости">новости</span> · <span data-q="погода">погода</span></div>
         </div>
@@ -114,18 +115,19 @@
                     <button class="sclr-sm" id="sclrSm">×</button>
                 </div>
                 <button class="ai-btn" id="aiBtnRes">🧠 AI</button>
+                <button class="acc-btn" id="accBtnRes">👤</button>
             </div>
             <div class="filters"><label><input type="checkbox" id="showAds" checked><span class="cb"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>Сайты с рекламой</label></div>
             <div class="stats" id="stats"></div>
             <div class="list" id="list"></div>
         </div>
-        <div class="foot">get-cool.ru · Чистый интернет · 2026</div>
+        <div class="foot">get-cool.ru · 2026</div>
     </div>
 
     <div class="bover" id="bover">
         <div class="btop">
-            <button class="bbtn" id="bback">←</button><button class="bbtn" id="bfwd">→</button><button class="bbtn" id="brel">↻</button>
             <div class="burl" id="burl"></div>
+            <button class="bbtn" id="brel">↻</button>
             <button class="bbtn x" id="bclose">✕</button>
         </div>
         <iframe class="bframe" id="bframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
@@ -134,90 +136,96 @@
     <div class="aiover" id="aiover">
         <div class="aiwin">
             <div class="aihead"><span class="aititle">🧠 Cool AI</span><button class="aiclose" id="aiclose">✕</button></div>
-            <div class="aichat" id="aichat"><div class="aimsg b">Привет! Я Cool AI. Могу искать новости, погоду, факты из интернета. Спросите что угодно!</div></div>
-            <div class="airow"><input class="aiinp" id="aiinp" placeholder="Спросите о новостях, погоде, чём угодно..." autocomplete="off"><button class="aisend" id="aisend">➤</button></div>
+            <div class="aichat" id="aichat"><div class="aimsg b">Привет! Спроси о погоде, новостях или чём угодно — я найду ответ.</div></div>
+            <div class="airow"><input class="aiinp" id="aiinp" placeholder="Спросите что-нибудь..." autocomplete="off"><button class="aisend" id="aisend">➤</button></div>
+        </div>
+    </div>
+
+    <div class="accover" id="accover">
+        <div class="accwin">
+            <div class="acchead"><span class="acctitle">👤 Аккаунт</span><button class="accclose" id="accclose">✕</button></div>
+            <div class="accform" id="accForm">
+                <input class="accinp" id="accName" placeholder="Имя" autocomplete="off">
+                <input class="accinp" id="accPass" placeholder="Пароль" type="password" autocomplete="off">
+                <button class="accbtn" id="accLogin">Войти / Создать</button>
+            </div>
+            <div class="hist-list" id="histList"><div style="color:#666;font-size:12px;text-align:center;padding:20px">Войдите для истории</div></div>
         </div>
     </div>
 
     <script>
         const $=id=>document.getElementById(id);
-        const home=$('home'),resPage=$('resPage'),siMain=$('siMain'),sclrMain=$('sclrMain'),siSm=$('siSm'),sclrSm=$('sclrSm'),showAds=$('showAds'),list=$('list'),stats=$('stats');
+        const home=$('home'),resPage=$('resPage'),siMain=$('siMain'),siSm=$('siSm'),showAds=$('showAds'),list=$('list'),stats=$('stats');
         const bover=$('bover'),bframe=$('bframe'),burl=$('burl'),aiover=$('aiover'),aichat=$('aichat'),aiinp=$('aiinp'),aisend=$('aisend');
-        let searching=false,bhist=[],bidx=-1;
+        const accover=$('accover'),accName=$('accName'),accPass=$('accPass'),histList=$('histList'),accForm=$('accForm');
+        let searching=false,currentUser=null;
 
-        const CLEAN=['wikipedia.org','habr.com','github.com','stackoverflow.com','arxiv.org','gitlab.com','developer.mozilla.org','openstreetmap.org','archive.org','pypi.org','npmjs.com','react.dev','vuejs.org','svelte.dev','codepen.io','freecodecamp.org','khanacademy.org','leetcode.com','proton.me','signal.org','eff.org','cloudflare.com','fast.com','caniuse.com','sqlite.org','redis.io','digitalocean.com','vercel.com','netlify.com','replit.com','jsfiddle.net','getbootstrap.com','tailwindcss.com'];
-        function isClean(u){try{const h=new URL(u).hostname.replace('www.','');return CLEAN.some(c=>h===c||h.endsWith('.'+c))}catch{return false}}
         function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
         function tgl(inp,clr){clr.classList.toggle('on',inp.value.length>0)}
-        siMain.addEventListener('input',()=>tgl(siMain,sclrMain));
-        sclrMain.addEventListener('click',()=>{siMain.value='';tgl(siMain,sclrMain);siMain.focus()});
-        siSm.addEventListener('input',()=>tgl(siSm,sclrSm));
-        sclrSm.addEventListener('click',()=>{siSm.value='';tgl(siSm,sclrSm);siSm.focus()});
 
-        function goToResults(q){home.style.display='none';resPage.classList.add('on');siSm.value=q;tgl(siSm,sclrSm);doSearch(q)}
-        function goHome(){home.style.display='';resPage.classList.remove('on');list.innerHTML='';stats.textContent='';siMain.value='';tgl(siMain,sclrMain)}
-        $('logoSm').addEventListener('click',goHome);
-
+        // Поиск
         async function doSearch(q){
             if(searching||!q||!q.trim())return;q=q.trim();searching=true;list.innerHTML='';stats.textContent='Поиск...';
             let results=[];
-            try{const r=await fetch(`https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=12`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,'')}));}catch(e){}
+            try{const r=await fetch(`https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=15`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,'')}));}catch(e){}
             try{const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&t=gc`);const d=await r.json();if(d.AbstractURL)results.push({url:d.AbstractURL,title:d.Heading||q,snippet:d.AbstractText});if(d.RelatedTopics)d.RelatedTopics.forEach(t=>{if(t.FirstURL)results.push({url:t.FirstURL,title:t.Text.split(' - ')[0],snippet:t.Text})});if(d.Results)d.Results.forEach(r=>{if(r.FirstURL)results.push({url:r.FirstURL,title:r.Text.split(' - ')[0],snippet:r.Text})});}catch(e){}
-            if(results.length<5){[{url:'https://ru.wikipedia.org',title:'Википедия',snippet:'Свободная энциклопедия.'},{url:'https://habr.com',title:'Хабр',snippet:'IT-сообщество.'},{url:'https://github.com',title:'GitHub',snippet:'Разработка.'},{url:'https://rbc.ru',title:'РБК',snippet:'Новости.'},{url:'https://vc.ru',title:'VC.ru',snippet:'Бизнес.'}].forEach(d=>{if(!results.find(r=>r.url===d.url))results.push(d)})}
-            const seen=new Set(),clean=[],ads=[];results.forEach(r=>{if(!r.url?.startsWith('http')||seen.has(r.url))return;seen.add(r.url);r.isClean=isClean(r.url);(r.isClean?clean:ads).push(r)});
-            let sorted=showAds.checked?[...clean,...ads]:clean;sorted=sorted.slice(0,20);
-            stats.textContent=`Результатов: ${sorted.length} (✓ чистых: ${clean.length})`;
-            list.innerHTML=sorted.length?'':`<div style="text-align:center;padding:40px;color:#888"><div style="font-size:40px">🔍</div><p>Ничего не найдено</p></div>`;
-            sorted.forEach(r=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div class="cu">${esc(r.url.replace(/^https?:\/\//,'').replace(/\/.*/,''))}<span class="bd ${r.isClean?'g':'y'}">${r.isClean?'✓':'⚠'}</span></div><div class="ct">${esc(r.title)}</div><div class="cs">${esc(r.snippet||'')}</div>`;c.addEventListener('click',()=>openBrowser(r.url));list.appendChild(c)});
+            // Дополнительные источники
+            try{const r=await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=10`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,'')}));}catch(e){}
+            if(results.length<10){
+                const dummy=[{url:'https://ru.wikipedia.org',title:'Википедия',snippet:'Свободная энциклопедия.'},{url:'https://habr.com',title:'Хабр',snippet:'IT-сообщество.'},{url:'https://github.com',title:'GitHub',snippet:'Разработка.'},{url:'https://rbc.ru',title:'РБК',snippet:'Новости.'},{url:'https://ria.ru',title:'РИА Новости',snippet:'События.'},{url:'https://lenta.ru',title:'Лента.ру',snippet:'Новости дня.'},{url:'https://vc.ru',title:'VC.ru',snippet:'Бизнес.'},{url:'https://dtf.ru',title:'DTF',snippet:'Игры и медиа.'},{url:'https://pikabu.ru',title:'Пикабу',snippet:'Развлечения.'},{url:'https://youtube.com',title:'YouTube',snippet:'Видео.'}];
+                dummy.forEach(d=>{if(!results.find(r=>r.url===d.url))results.push(d)})
+            }
+            const seen=new Set();const all=results.filter(r=>{if(!r.url?.startsWith('http')||seen.has(r.url))return false;seen.add(r.url);r.isClean=!r.url.includes('rbc.ru')&&!r.url.includes('ria.ru')&&!r.url.includes('lenta.ru');return true});
+            let sorted=showAds.checked?all:all.filter(r=>r.isClean);sorted=sorted.slice(0,25);
+            stats.textContent=`Результатов: ${sorted.length}`;
+            list.innerHTML=sorted.length?'':`<div style="text-align:center;padding:40px;color:#888">Ничего не найдено</div>`;
+            sorted.forEach(r=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div class="cu">${esc(r.url.replace(/^https?:\/\//,'').split('/')[0])}<span class="bd ${r.isClean?'g':'y'}">${r.isClean?'✓':'⚠'}</span></div><div class="ct">${esc(r.title)}</div><div class="cs">${esc(r.snippet||'')}</div>`;c.addEventListener('click',()=>{openBrowser(r.url);addToHistory(r.url,r.title)});list.appendChild(c)});
             searching=false;
         }
 
-        function openBrowser(u){bover.classList.add('on');burl.textContent=u;bframe.src=u;bhist=bhist.slice(0,bidx+1);bhist.push(u);bidx=bhist.length-1}
-        function closeBrowser(){bover.classList.remove('on');bframe.src='';bhist=[];bidx=-1}
+        function openBrowser(u){bover.classList.add('on');burl.textContent=u;bframe.src=u}
+        function closeBrowser(){bover.classList.remove('on');bframe.src=''}
         $('bclose').addEventListener('click',closeBrowser);
-        $('bback').addEventListener('click',()=>{if(bidx>0){bidx--;const u=bhist[bidx];burl.textContent=u;bframe.src=u}});
-        $('bfwd').addEventListener('click',()=>{if(bidx<bhist.length-1){bidx++;const u=bhist[bidx];burl.textContent=u;bframe.src=u}});
         $('brel').addEventListener('click',()=>{bframe.src=bframe.src});
 
+        // AI
         function openAI(){aiover.classList.add('on');aiinp.focus()}
         function closeAI(){aiover.classList.remove('on')}
-        $('aiBtnHome').addEventListener('click',openAI);$('aiBtnRes').addEventListener('click',openAI);
-        $('aiclose').addEventListener('click',closeAI);
-        aiover.addEventListener('click',e=>{if(e.target===aiover)closeAI()});
-        document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAI();closeBrowser()}});
-
         function addMsg(t,p){const m=document.createElement('div');m.className='aimsg '+p;m.textContent=t;aichat.appendChild(m);aichat.scrollTop=aichat.scrollHeight}
-        function showType(){const d=document.createElement('div');d.className='aitype';d.id='aitype';d.innerHTML='<span></span><span></span><span></span>';aichat.appendChild(d);aichat.scrollTop=aichat.scrollHeight}
+        function showType(){const d=document.createElement('div');d.className='aitype';d.id='aitype';d.innerHTML='<span></span><span></span><span></span>';aichat.appendChild(d)}
         function hideType(){const t=$('aitype');if(t)t.remove()}
 
         async function sendAI(){
             const t=aiinp.value.trim();if(!t)return;aiinp.value='';addMsg(t,'u');showType();aisend.disabled=true;
-            setTimeout(async()=>{
-                hideType();const q=t.toLowerCase();let a='';
-                // Пробуем найти ответ через DuckDuckGo
-                try{
-                    const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(t)}&format=json&no_html=1&t=coolai`);
-                    const d=await r.json();
-                    if(d.AbstractText&&d.AbstractText.length>30){a=d.AbstractText.substring(0,500)+(d.AbstractURL?`\n\nПодробнее: ${d.AbstractURL}`:'')}
-                    else if(d.RelatedTopics&&d.RelatedTopics.length>0){
-                        a='Вот что нашлось:\n';
-                        d.RelatedTopics.slice(0,5).forEach((t,i)=>a+=`\n${i+1}. ${t.Text.split(' - ')[0].substring(0,100)}${t.FirstURL?' — '+t.FirstURL:''}`)
-                    }
-                    else a='Ничего не найдено по вашему запросу. Попробуйте спросить иначе.';
-                }catch(e){a='Не удалось подключиться к поиску. Проверьте интернет.'}
-                addMsg(a,'b');aisend.disabled=false;
-            },600);
+            try{
+                // Погода
+                const wm=t.match(/погода\s+в?\s*(.+)/i)||(t.toLowerCase().includes('погода')?['',t.replace(/погода\s*/i,'').trim()||'Москва']:null);
+                if(wm){
+                    const r=await fetch(`https://wttr.in/${encodeURIComponent(wm[1])}?format=j1&lang=ru`);
+                    const d=await r.json();const c=d.current_condition[0];
+                    hideType();addMsg(`🌤 ${wm[1]}: ${c.temp_C}°C, ${c.weatherDesc[0].value}, ветер ${c.windspeedKmph} км/ч, влажность ${c.humidity}%`,'b');
+                    aisend.disabled=false;return;
+                }
+                // Общий поиск
+                const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(t)}&format=json&no_html=1&t=gc`);
+                const d=await r.json();hideType();
+                if(d.AbstractText&&d.AbstractText.length>20)addMsg(d.AbstractText.substring(0,500)+(d.AbstractURL?'\n\n🔗 '+d.AbstractURL:''),'b');
+                else if(d.RelatedTopics?.length>0){
+                    let a='Вот что нашлось:\n';d.RelatedTopics.slice(0,5).forEach((t,i)=>a+=`\n${i+1}. ${t.Text.split(' - ')[0].substring(0,100)}`);
+                    addMsg(a,'b');
+                }else addMsg('Ничего не найдено. Попробуйте иначе.','b');
+            }catch(e){hideType();addMsg('Ошибка соединения.','b')}
+            aisend.disabled=false;
         }
-        aisend.addEventListener('click',sendAI);aiinp.addEventListener('keydown',e=>{if(e.key==='Enter')sendAI()});
 
-        $('siconMain').addEventListener('click',()=>{const q=siMain.value.trim();if(q)goToResults(q)});
-        siMain.addEventListener('keydown',e=>{if(e.key==='Enter'){const q=siMain.value.trim();if(q)goToResults(q)}});
-        $('searchBtn').addEventListener('click',()=>{const q=siMain.value.trim();if(q)goToResults(q)});
-        $('siconSm').addEventListener('click',()=>{const q=siSm.value.trim();if(q)doSearch(q)});
-        siSm.addEventListener('keydown',e=>{if(e.key==='Enter'){const q=siSm.value.trim();if(q)doSearch(q)}});
-        document.querySelectorAll('.hint span').forEach(s=>s.addEventListener('click',()=>goToResults(s.dataset.q)));
-        showAds.addEventListener('change',()=>{const q=siSm.value.trim();if(q)doSearch(q)});
-        tgl(siMain,sclrMain);tgl(siSm,sclrSm);
-    </script>
-</body>
-    </html>
+        // Аккаунт
+        function loadUsers(){try{return JSON.parse(localStorage.getItem('gc_u')||'{}')}catch{return{}}}
+        function saveUsers(u){localStorage.setItem('gc_u',JSON.stringify(u))}
+        function login(){
+            const n=accName.value.trim(),p=accPass.value.trim();if(!n||!p)return;
+            const u=loadUsers();if(u[n]&&u[n].p!==p)return alert('Неверный пароль');
+            if(!u[n])u[n]={p:p,h:[]};saveUsers(u);currentUser=n;
+            accForm.innerHTML=`<div style="color:#4ade80;text-align:center;font-weight:700;padding:10px">✓ ${n}</div><button class="accbtn" id="accLogout" style="background:#f8717140;color:#f87171;margin-top:8px">Выйти</button>`;
+            document.getElementById('accLogout').addEventListener('click',logout);renderHistory();
+        }
+        function logout(){currentUser=null;accForm.innerHTML=`<input class="accinp" id="accName" placeholder="Имя" autocomplete="off"><input class="accinp" id="accPass" pl
