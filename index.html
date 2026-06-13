@@ -127,34 +127,125 @@ let searching=false;
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function tgl(inp,clr){clr.classList.toggle('on',inp.value.length>0)}
 
+// ОТКРЫТИЕ САЙТА: сначала пробуем iframe, если не грузится — новая вкладка
+function openSite(url){
+    bover.classList.add('on');
+    burl.textContent=url;
+    bframe.src=url;
+    clearTimeout(bframe._timeout);
+    bframe._timeout=setTimeout(()=>{
+        try{
+            if(!bframe.contentDocument||!bframe.contentDocument.body||bframe.contentDocument.body.innerHTML.trim()===''){
+                bover.classList.remove('on');
+                window.open(url,'_blank');
+            }
+        }catch(e){bover.classList.remove('on');window.open(url,'_blank')}
+    },2500);
+}
+
 async function doSearch(q){
     if(searching||!q)return;q=q.trim();if(!q)return;
     searching=true;list.innerHTML='';stats.textContent='Ищем по всем сайтам...';
     let results=[];
 
     // Wikipedia RU
-    try{const r=await fetch(`https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=10`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),clean:true}));}catch(e){}
+    try{
+        const r=await fetch(`https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=10`);
+        const d=await r.json();
+        if(d.query?.search)d.query.search.forEach(p=>results.push({
+            url:`https://ru.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,
+            title:p.title,snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),clean:true
+        }));
+    }catch(e){}
 
-    // DuckDuckGo (все сайты)
-    try{const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&t=gc`);const d=await r.json();if(d.AbstractURL)results.push({url:d.AbstractURL,title:d.Heading||q,snippet:d.AbstractText,clean:false});if(d.RelatedTopics)d.RelatedTopics.forEach(t=>{if(t.FirstURL)results.push({url:t.FirstURL,title:t.Text.split(' - ')[0],snippet:t.Text,clean:false})});if(d.Results)d.Results.forEach(r=>{if(r.FirstURL)results.push({url:r.FirstURL,title:r.Text.split(' - ')[0],snippet:r.Text,clean:false})});}catch(e){}
+    // DuckDuckGo — ВСЕ САЙТЫ
+    try{
+        const r=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&t=gc`);
+        const d=await r.json();
+        if(d.AbstractURL&&d.AbstractText)results.push({url:d.AbstractURL,title:d.Heading||q,snippet:d.AbstractText,clean:false});
+        if(d.RelatedTopics)d.RelatedTopics.forEach(t=>{if(t.FirstURL&&t.Text)results.push({url:t.FirstURL,title:t.Text.split(' - ')[0],snippet:t.Text,clean:false})});
+        if(d.Results)d.Results.forEach(r=>{if(r.FirstURL&&r.Text)results.push({url:r.FirstURL,title:r.Text.split(' - ')[0],snippet:r.Text,clean:false})});
+    }catch(e){}
 
     // Wikipedia EN
-    try{const r=await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=8`);const d=await r.json();if(d.query?.search)d.query.search.forEach(p=>results.push({url:`https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,title:p.title+' (EN)',snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),clean:true}));}catch(e){}
+    try{
+        const r=await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=8`);
+        const d=await r.json();
+        if(d.query?.search)d.query.search.forEach(p=>results.push({
+            url:`https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replace(/ /g,'_'))}`,
+            title:p.title+' (EN)',snippet:(p.snippet||'').replace(/<\/?[^>]+(>|$)/g,''),clean:true
+        }));
+    }catch(e){}
 
-    // Заглушка — популярные сайты
-    if(results.length<8){
-        [{url:'https://ru.wikipedia.org',title:'Википедия',snippet:'Свободная энциклопедия.',clean:true},{url:'https://habr.com',title:'Хабр',snippet:'IT-сообщество.',clean:true},{url:'https://github.com',title:'GitHub',snippet:'Платформа для разработки.',clean:true},{url:'https://rbc.ru',title:'РБК',snippet:'Новости.',clean:false},{url:'https://ria.ru',title:'РИА Новости',snippet:'События дня.',clean:false},{url:'https://vc.ru',title:'VC.ru',snippet:'Бизнес и технологии.',clean:false},{url:'https://dtf.ru',title:'DTF',snippet:'Игры и медиа.',clean:false},{url:'https://youtube.com',title:'YouTube',snippet:'Видеохостинг.',clean:false}].forEach(d=>{if(!results.find(r=>r.url===d.url))results.push(d)});
+    // Прямые ссылки на популярные сайты по запросу
+    const directSites={
+        'ютуб':'https://youtube.com',
+        'youtube':'https://youtube.com',
+        'вконтакте':'https://vk.com',
+        'vk':'https://vk.com',
+        'телеграм':'https://t.me',
+        'telegram':'https://t.me',
+        'авито':'https://avito.ru',
+        'avito':'https://avito.ru',
+        'озон':'https://ozon.ru',
+        'ozon':'https://ozon.ru',
+        'вб':'https://wildberries.ru',
+        'wildberries':'https://wildberries.ru',
+        'яндекс':'https://ya.ru',
+        'yandex':'https://ya.ru',
+        'гyгл':'https://google.com',
+        'google':'https://google.com',
+        'хaбр':'https://habr.com',
+        'habr':'https://habr.com',
+        'гитхaб':'https://github.com',
+        'github':'https://github.com',
+        'рбк':'https://rbc.ru',
+        'rbc':'https://rbc.ru',
+        'риa':'https://ria.ru',
+        'ria':'https://ria.ru',
+        'лентa':'https://lenta.ru',
+        'lenta':'https://lenta.ru',
+        'пикабy':'https://pikabu.ru',
+        'pikabu':'https://pikabu.ru',
+        'реддит':'https://reddit.com',
+        'reddit':'https://reddit.com',
+        'твитeр':'https://twitter.com',
+        'twitter':'https://twitter.com',
+        'x':'https://x.com',
+        'твич':'https://twitch.tv',
+        'twitch':'https://twitch.tv',
+        'кинопоиск':'https://kinopoisk.ru',
+        'hh':'https://hh.ru',
+        'headhunter':'https://hh.ru',
+        'сиан':'https://cian.ru',
+        'cian':'https://cian.ru',
+    };
+    const lowerQ=q.toLowerCase().replace(/\s/g,'');
+    if(directSites[lowerQ]&&!results.find(r=>r.url===directSites[lowerQ])){
+        results.unshift({url:directSites[lowerQ],title:q.charAt(0).toUpperCase()+q.slice(1),snippet:'Прямой переход на сайт.',clean:true});
     }
 
-    const seen=new Set();const all=results.filter(r=>{if(!r.url?.startsWith('http')||seen.has(r.url))return false;seen.add(r.url);return true});
-    const sorted=showAds.checked?all:all.filter(r=>r.clean);const final=sorted.slice(0,20);
-    stats.textContent=`Найдено: ${final.length}`;list.innerHTML=final.length?'':'<div style="text-align:center;padding:40px;color:#888">Ничего не найдено</div>';
-    final.forEach(r=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div class="cu">${esc(r.url.replace(/^https?:\/\//,'').split('/')[0])} <span class="bd ${r.clean?'g':'y'}">${r.clean?'✓':'⚠'}</span></div><div class="ct">${esc(r.title)}</div><div class="cs">${esc(r.snippet||'')}</div>`;c.addEventListener('click',()=>openBrowser(r.url));list.appendChild(c)});
+    if(results.length<6){
+        [{url:'https://ru.wikipedia.org',title:'Википедия',snippet:'Энциклопедия.',clean:true},{url:'https://youtube.com',title:'YouTube',snippet:'Видеохостинг.',clean:false},{url:'https://habr.com',title:'Хабр',snippet:'IT.',clean:true},{url:'https://github.com',title:'GitHub',snippet:'Код.',clean:true},{url:'https://rbc.ru',title:'РБК',snippet:'Новости.',clean:false},{url:'https://vk.com',title:'ВКонтакте',snippet:'Соцсеть.',clean:false}].forEach(d=>{if(!results.find(r=>r.url===d.url))results.push(d)});
+    }
+
+    const seen=new Set();
+    const all=results.filter(r=>{if(!r.url?.startsWith('http')||seen.has(r.url))return false;seen.add(r.url);return true});
+    const sorted=showAds.checked?all:all.filter(r=>r.clean);
+    const final=sorted.slice(0,20);
+
+    stats.textContent=`Найдено: ${final.length}`;
+    list.innerHTML=final.length?'':'<div style="text-align:center;padding:40px;color:#888">Ничего не найдено</div>';
+    final.forEach(r=>{
+        const c=document.createElement('div');c.className='card';
+        c.innerHTML=`<div class="cu">${esc(r.url.replace(/^https?:\/\//,'').split('/')[0])} <span class="bd ${r.clean?'g':'y'}">${r.clean?'✓':'⚠'}</span></div><div class="ct">${esc(r.title)}</div><div class="cs">${esc(r.snippet||'')}</div>`;
+        c.addEventListener('click',()=>openSite(r.url));
+        list.appendChild(c);
+    });
     searching=false;
 }
 
-function openBrowser(u){bover.classList.add('on');burl.textContent=u;bframe.src=u}
-$('bclose').addEventListener('click',()=>{bover.classList.remove('on');bframe.src=''});
+$('bclose').addEventListener('click',()=>{bover.classList.remove('on');bframe.src='';clearTimeout(bframe._timeout)});
 $('brel').addEventListener('click',()=>{bframe.src=bframe.src});
 
 function openAI(){aiover.classList.add('on');aiinp.focus()}
@@ -164,7 +255,7 @@ function showType(){const d=document.createElement('div');d.className='aitype';d
 function hideType(){const t=$('aitype');if(t)t.remove()}
 
 function makeLinksClickable(text){
-    return text.replace(/(https?:\/\/[^\s]+)/g,'<a onclick="event.stopPropagation();document.getElementById(\'bover\').classList.add(\'on\');document.getElementById(\'bframe\').src=\'$1\';document.getElementById(\'burl\').textContent=\'$1\'">$1</a>');
+    return text.replace(/(https?:\/\/[^\s]+)/g,'<a onclick="event.stopPropagation();window.open(\'$1\',\'_blank\')">$1</a>');
 }
 
 async function sendAI(){
@@ -177,7 +268,7 @@ async function sendAI(){
             hideType();addMsg(`🌤 <b>${wm[1]}</b>: ${c.temp_C}°C, ${c.weatherDesc[0].value}, ветер ${c.windspeedKmph} км/ч, влажность ${c.humidity}%`,'b');
             aisend.disabled=false;return;
         }
-        const greetings={привет:'Привет! Как дела?',какдела:'Отлично!',кактебязовут:'Я Cool AI.',ктоты:'Я Cool AI — поисковик.',чтотыумеешь:'Ищу по всем сайтам, погоду, новости, общаюсь.'};
+        const greetings={привет:'Привет!',какдела:'Отлично!',кактебязовут:'Я Cool AI.',ктоты:'Я Cool AI.',чтотыумеешь:'Ищу по всем сайтам, погоду, новости.'};
         const q=t.toLowerCase().replace(/[?.,!\s]/g,'');
         if(greetings[q]){hideType();addMsg(greetings[q],'b');aisend.disabled=false;return}
 
@@ -188,7 +279,7 @@ async function sendAI(){
             let a='Результаты:\n';
             d.RelatedTopics.slice(0,5).forEach((t,i)=>{const url=t.FirstURL||'';a+=`\n${i+1}. ${t.Text.split(' - ')[0].substring(0,80)}${url?'\n🔗 '+url:''}`});
             addMsg(makeLinksClickable(a),'b');
-        }else addMsg('Не нашлось. Спросите иначе.','b');
+        }else addMsg('Не нашлось.','b');
     }catch(e){hideType();addMsg('Ошибка.','b')}
     aisend.disabled=false;
 }
@@ -207,7 +298,7 @@ $('aiBtnHome').addEventListener('click',openAI);$('aiBtnRes').addEventListener('
 $('aiclose').addEventListener('click',closeAI);aisend.addEventListener('click',sendAI);
 aiinp.addEventListener('keydown',e=>{if(e.key==='Enter')sendAI()});
 aiover.addEventListener('click',e=>{if(e.target===aiover)closeAI()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAI();bover.classList.remove('on');bframe.src=''}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAI();bover.classList.remove('on');bframe.src='';clearTimeout(bframe._timeout)}});
 tgl(siMain,$('sclrMain'));siMain.addEventListener('input',()=>tgl(siMain,$('sclrMain')));
 $('sclrMain').addEventListener('click',()=>{siMain.value='';tgl(siMain,$('sclrMain'))});
 tgl(siSm,$('sclrSm'));siSm.addEventListener('input',()=>tgl(siSm,$('sclrSm')));
